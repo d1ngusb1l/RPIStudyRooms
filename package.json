@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx ./app.ts"
+    "start-server": "tsx ./app.ts",
+    "start": "cd frontend && npm run build && cd .. && npm run start-server"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
