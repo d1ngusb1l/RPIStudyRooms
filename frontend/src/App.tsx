@@ -1,41 +1,5 @@
-//import { useState } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
 import './App.css'
-
-
-/*
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
-*/
+import Collapsible from "./Collapsible";
 
 
 const rooms = [
@@ -70,15 +34,14 @@ function FullButton() {
 function ListRooms() {
   const listRooms = rooms.map(room =>
     <li key={room.number}>
-      <h1>
-        <b>{room.number}</b>
-      </h1>
-      <p>
-          Reported as: {' ' + room.status + ' '}
-          at: {room.lastReported}
-      </p>
-      <FullButton/>
-      <EmptyButton/>
+      <Collapsible title= {room.number.toString()}>
+        <p>
+            Reported as: {' ' + room.status + ' '}
+            at: {room.lastReported}
+        </p>
+        <FullButton/>
+        <EmptyButton/>
+      </Collapsible>
     </li>
   );
   return <ul style={{listStyle: 'none' }}>{listRooms}</ul>;
