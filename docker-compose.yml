@@ -1,0 +1,36 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/frontend/src
+    environment:
+      - VITE_BACKEND_URL=http://backend:5001
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - DB_URL=postgresql://rpistudyrooms:rpistudyrooms@db:5432/rpistudyrooms
+    depends_on:
+      - db
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rpistudyrooms
+      POSTGRES_PASSWORD: rpistudyrooms
+      POSTGRES_DB: rpistudyrooms
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:

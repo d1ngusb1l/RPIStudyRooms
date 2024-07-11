@@ -7,9 +7,12 @@ import setUsersRouter from "./routes/users.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const projectBase = path.resolve(__dirname, "../");
+const frontendBase = path.join(projectBase, "frontend");
+const frontendDistBase = path.join(frontendBase, "dist");
 
 const app = express();
-app.use(express.static('./frontend/dist'));
+app.use(express.static(frontendDistBase));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -23,7 +26,7 @@ for (const router of routers) {
 
 if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
+    res.sendFile(path.join(frontendDistBase, "index.html"));
   });
 }
 
