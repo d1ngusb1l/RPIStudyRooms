@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import setUsersRouter from "./routes/users";
+import setUsersRouter from "./routes/users.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,10 +21,14 @@ for (const router of routers) {
   router(app);
 }
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/frontend/dist/index.html"));
-});
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
+  });
+}
 
-app.listen(5001, () => {
-  console.log('Listening on *:' + 5001);
+const port = Number(process.env.PORT) || 5001;
+
+app.listen(port, () => {
+  console.log('Listening on *:' + port);
 });
