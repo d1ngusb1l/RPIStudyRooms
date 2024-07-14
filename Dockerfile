@@ -7,10 +7,23 @@ RUN npm ci --include=dev
 
 COPY src src
 
+FROM node:20.15-alpine as prisma-gen
+
+WORKDIR /app
+
+COPY package.json ./
+COPY package-lock.json ./
+
+COPY prisma prisma
+RUN npm ci --include=dev
+RUN npx prisma generate
+
 FROM node:20.15-alpine as dev
 
 WORKDIR /app
 COPY --from=build /app .
+COPY --from=prisma-gen /app/node_modules/@prisma/client /app/node_modules/@prisma/client
+COPY --from=prisma-gen /app/node_modules/.prisma/client /app/node_modules/.prisma/client
 
 ENV NODE_ENV=development
 CMD ["npm", "run", "start-server-dev"]
@@ -47,6 +60,8 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 COPY --from=prod-deps /app/node_modules node_modules
+COPY --from=prisma-gen /app/node_modules/@prisma/client /app/node_modules/@prisma/client
+COPY --from=prisma-gen /app/node_modules/.prisma/client /app/node_modules/.prisma/client
 COPY --from=prod-build /app/dist dist
 COPY --from=prod-frontend /app/frontend/dist frontend/dist
 
