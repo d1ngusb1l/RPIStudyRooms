@@ -18,7 +18,7 @@ services:
     volumes:
       - ./src:/app/src
     environment:
-      - DB_URL=postgresql://rpistudyrooms:rpistudyrooms@db:5432/rpistudyrooms
+      - DATABASE_URL=postgresql://rpistudyrooms:rpistudyrooms@db:5432/rpistudyrooms
     depends_on:
       - db
   db:
