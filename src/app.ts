@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import setUsersRouter from "./routes/users.js";
+import {createDB} from "./db.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,5 +34,7 @@ if (process.env.NODE_ENV === "production") {
 const port = Number(process.env.PORT) || 5001;
 
 app.listen(port, () => {
+  //createDB();
   console.log('Listening on *:' + port);
+
 });
