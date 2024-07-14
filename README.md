@@ -12,4 +12,4 @@ Every time you `npm install` in either the frontend or backend, you need to run 
 
 ## How to Migrate Database
 
-Run `npm install` followed by `npx prisma migrate dev --name <migration-name>` to create a new migration. Then run `npx prisma migrate deploy` to apply the migration to the database.
+Run `npm install` followed by `npx prisma migrate dev --name <migration-name>` to create a new migration. Then run `npx prisma migrate deploy` to apply the migration to the database (also do this to init the prisma files on first clone).
