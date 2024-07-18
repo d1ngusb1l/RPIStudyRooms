@@ -7,7 +7,7 @@ function EmptyButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
   return (
-    <button onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum)).then(async (r) => {
+    <button onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
@@ -22,7 +22,7 @@ function FullButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
   return (
-    <button onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum)).then(async (r) => {
+    <button onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
