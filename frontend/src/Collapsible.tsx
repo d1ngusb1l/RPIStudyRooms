@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+
+import chevronDown from "./assets/chevron-down.svg";
+import chevronUp from "./assets/chevron-up.svg";
 interface IProps {
   open?: boolean;
   title: string;
@@ -17,15 +20,15 @@ const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children
         <div>
           <div className="p-3 border-bottom d-flex justify-content-between">
             <h6 className="font-weight-bold">{title}</h6>
-            <button type="button" 
-            className="btn" 
-            onClick={handleFilterOpening}
-            style={{ width: '300px', height: '50px' }} 
+            <button type="button"
+              className="btn"
+              onClick={handleFilterOpening}
+              style={{ width: '300px', height: '50px' }}
             >
               {!isOpen ? (
-                <img src="/src/assets/chevron-down.svg" alt="expand" style={{ width: '100%', height: '100%' }} />
+                <img src={chevronDown} alt="expand" style={{ width: '100%', height: '100%' }} />
               ) : (
-                <img src="/src/assets/chevron-up.svg" alt="collapse" style={{ width: '100%', height: '100%' }} />
+                <img src={chevronUp} alt="collapse" style={{ width: '100%', height: '100%' }} />
               )}
             </button>
           </div>
