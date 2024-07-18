@@ -41,6 +41,9 @@ function ListRooms() {
 
 
 function ScrollableList() {
+
+  /*Scrollable list probably needs to have it's height capped */
+
   return (
     <div className="scrollable-list" style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
       <ListRooms />
