@@ -1,3 +1,4 @@
+import { Floor } from "./types";
 
 function NoiseLevelButton({noiseNumber}: {noiseNumber : number}) {
     return( 
@@ -7,7 +8,18 @@ function NoiseLevelButton({noiseNumber}: {noiseNumber : number}) {
     );
 }
 
-export function NoiseLevelReporter() {
+function CalculateCurrentNoiseLevel({cFloor}: {cFloor : Floor}) {
+    let i = 0;
+    for (const n of cFloor.noiseReports) {
+        i += n.noiseLevel;
+    }
+    i /= cFloor.noiseReports.length;
+    return (
+        <p> Current noise level: {i} </p>
+    );
+}
+
+export function NoiseLevelReporter({currentFloor}: {currentFloor : Floor}) {
     return (
         <div>
             <div> <p>Report Noise Level of Floor</p> </div>
@@ -17,6 +29,9 @@ export function NoiseLevelReporter() {
                 <NoiseLevelButton noiseNumber={3}/>
                 <NoiseLevelButton noiseNumber={4}/>
                 <NoiseLevelButton noiseNumber={5}/>
+            </div>
+            <div>
+                <CalculateCurrentNoiseLevel cFloor={currentFloor}/>
             </div>
         </div>
     )
