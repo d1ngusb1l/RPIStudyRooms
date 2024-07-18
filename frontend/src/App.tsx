@@ -3,6 +3,7 @@ import './App.css'
 import { backendURL } from './utils';
 import { RoomContext, Rooms, RoomsDef, validateType } from './types';
 import RoomListing from './RoomListing';
+import { NoiseLevelReporter } from './NoiseLevels';
 
 import logo from "./assets/rpistudyroomslogo.png";
 import mapplaceholder from "./assets/mapplaceholder.png";
@@ -69,6 +70,7 @@ export default function MyApp() {
             </div>
             <ScrollableList />
           </div>
+          <NoiseLevelReporter/>
           <img src={mapplaceholder} className="map" />
         </div>
       </div>
