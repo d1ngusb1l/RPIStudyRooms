@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.32.34",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "typebox": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

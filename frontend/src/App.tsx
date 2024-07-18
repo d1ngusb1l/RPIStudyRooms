@@ -1,19 +1,18 @@
+import { useEffect, useState } from 'react';
 import './App.css'
 import Collapsible from "./Collapsible";
+import { Type, type Static } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 
+const RoomDef = Type.Object({
+  id: Type.Number(),
+  roomNumber: Type.Number(),
+  reportAsOccupied: Type.Boolean(),
+  timeOfReport: Type.Date()
+})
+type Room = Static<typeof RoomDef>
+const UserArrayDef = Type.Array(RoomDef)
 
-const rooms = [
-  {number: 101, status: "full", lastReported: "7:08 am"},
-  {number: 102, status: "full", lastReported: "9:07 am"},
-  {number: 103, status: "empty", lastReported: "8:35 am"},
-  {number: 104, status: "empty", lastReported: "11:52 am"},
-  {number: 105, status: "empty", lastReported: "3:36 pm"},
-  {number: 106, status: "full", lastReported: "2:12 pm"},
-  {number: 107, status: "empty", lastReported: "5:31 pm"},
-  {number: 108, status: "full", lastReported: "4:46 pm"},
-  {number: 109, status: "full", lastReported: "5:11 pm"},
-  {number: 110, status: "empty", lastReported: "6:13 pm"},
-];
 
 function EmptyButton() {
   return (
@@ -32,25 +31,41 @@ function FullButton() {
 }
 
 function ListRooms() {
-  const listRooms = rooms.map(room =>
-    <li key={room.number}>
-      <Collapsible title= {room.number.toString()}>
+  const [rooms, setRooms] = useState<Room[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/database").then(async (res) => {
+      const data = await res.json();
+      if (Value.Check(UserArrayDef, data)) {
+        // We know for sure that data is of type Room[]
+        setRooms(data);
+      } else {
+        throw new Error("Invalid data");
+      }
+    })
+  }, [])
+
+
+  const listRooms = rooms ? rooms.map(room =>
+    <li key={room.roomNumber}>
+      <Collapsible title= {room.roomNumber.toString()}>
         <p>
-            Reported as: {' ' + room.status + ' '}
-            at: {room.lastReported}
+            Reported as: {' ' + room.reportAsOccupied + ' '}
+            at: {room.timeOfReport.toDateString()}
         </p>
         <FullButton/>
         <EmptyButton/>
       </Collapsible>
     </li>
-  );
+  ): 'error';
+
   return <ul style={{listStyle: 'none' }}>{listRooms}</ul>;
 }
 
 
 function ScrollableList() {
   return (
-    <div style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
+    <div style={{ height: '400px', overflow: 'scroll', overflowX: "hidden" }}>
       <ListRooms/>
     </div>
   );
