@@ -22,7 +22,7 @@ export type Room = Static<typeof RoomDef>;
 export type Rooms = Record<string, Room>;
 
 export const FloorDef = Type.Object({
-  number: Type.String(),
+  floorNum: Type.Number(),
   noiseReports: Type.Array(NoiseReportDef),
   rooms: Type.Array(Type.String()),
 });
@@ -55,7 +55,7 @@ export function validateType<T extends TSchema>(
   if (Value.Check(type, data)) {
     return data;
   } else {
-    if (shouldThrow) {
+    if (shouldThrow || shouldThrow === undefined) {
       console.error(
         "Got invalid data:",
         JSON.stringify([...Value.Errors(type, data)], null, 2)

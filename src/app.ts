@@ -83,7 +83,7 @@ app.post(
   }
 );
 
-app.post("/api/floors", (req, res: Response<Floors>) => {
+app.get("/api/floors", (req, res: Response<Floors>) => {
   res.json(floors);
 });
 
@@ -107,9 +107,9 @@ app.post(
       return;
     }
     const newNoiseReport: NoiseReport = {
-        timeReported: Date.now(),
-        noiseLevel,
-      };
+      timeReported: Date.now(),
+      noiseLevel,
+    };
     floor.noiseReports.push(newNoiseReport);
     res.json(newNoiseReport);
   }

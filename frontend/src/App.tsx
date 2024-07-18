@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { backendURL } from './utils';
-import { RoomContext, Rooms, RoomsDef, validateType } from './types';
+import { Floors, FloorsContext, FloorsDef, RoomContext, Rooms, RoomsDef, validateType } from './types';
 import RoomListing from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 
@@ -53,6 +53,8 @@ function ScrollableList() {
 }
 
 export default function MyApp() {
+  const [floors, setFloors] = useState<Floors | null>(null);
+  const [currentFloor, setCurrentFloor] = useState("3");
 
   const [isActive, setIsActive] = useState(false);
 
@@ -62,29 +64,45 @@ export default function MyApp() {
 
   }
 
+  useEffect(() => {
+    fetch(backendURL("/api/floors")).then(async (r) => {
+      const data = await r.json();
+      setFloors(validateType(FloorsDef, data));
+    })
+  }, []);
+
+
   return (
     <body>
-        <div className="flex-container">
-          <header className="title">
-            <img src={logo} alt="Logo" className="logo" />
-            <h2>RPIStudyRooms</h2>
-          </header>
-          <div className="content-and-map">
-            <div className="content">
-              <div className="rooms-and-map-button">
-                <h2>List of Rooms</h2>
-                <NoiseLevelReporter/>
-                <button onClick={() => toggleMap}>Display Map</button>
-              </div>
-              <ScrollableList/>
+      <div className="flex-container">
+        <header className="title">
+          <img src={logo} alt="Logo" className="logo" />
+          <h2>RPIStudyRooms</h2>
+        </header>
+        <div className="content-and-map">
+          <div className="content">
+            <div className="rooms-and-map-button">
+              <h2>List of Rooms</h2>
+              {floors !== null && <FloorsContext.Provider value={{
+                floors,
+                updateAllFloors: setFloors,
+                updateFloor: (floorNum, floor) => {
+                  setFloors({ ...floors, [floorNum]: floor });
+                }
+              }}>
+                <NoiseLevelReporter currentFloor={currentFloor} />
+              </FloorsContext.Provider>}
+              <button onClick={() => toggleMap}>Display Map</button>
             </div>
-            <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
+            <ScrollableList />
+          </div>
+          <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',
             }} */>
-              <img src={mapplaceholder} className='map' />
-            </div>
-          </div> 
+            <img src={mapplaceholder} className='map' />
+          </div>
         </div>
+      </div>
     </body>
   );
 }
