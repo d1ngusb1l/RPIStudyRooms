@@ -91,20 +91,14 @@ function ListRooms() {
 
 function ScrollableList() {
   return (
-<<<<<<< HEAD
     <div className="scrollable-list" style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
       <ListRooms/>
-=======
-    <div style={{ height: '400px', overflow: 'scroll', overflowX: "hidden" }}>
-      <ListRooms />
->>>>>>> bfe1f8eb5ab0c51d291ef6e25b78c5dab582d662
     </div>
   );
 }
 
 export default function MyApp() {
   return (
-<<<<<<< HEAD
     <body>
         <div className="flex-container">
           <header className="title">
@@ -124,12 +118,6 @@ export default function MyApp() {
           </div> 
         </div>
     </body>
-=======
-    <div>
-      <h1>List of Rooms</h1>
-      <ScrollableList />
-    </div>
->>>>>>> bfe1f8eb5ab0c51d291ef6e25b78c5dab582d662
   );
 }
 
