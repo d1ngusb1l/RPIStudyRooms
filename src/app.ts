@@ -6,6 +6,7 @@ import { dirname } from "path";
 import setUsersRouter from "./routes/users.js";
 import prisma from "./db.js"
 import { Room} from "@prisma/client"
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,6 +18,9 @@ const app = express();
 app.use(express.static(frontendDistBase));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN || undefined
+}))
 
 const routers: ((app: Express) => unknown)[] = [
   setUsersRouter,
