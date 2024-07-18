@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 interface IProps {
   open?: boolean;
-  children: any;
   title: string;
 }
 
-const Collapsible: React.FC<IProps> = ({ open, children, title }) => {
+const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children, title }) => {
   const [isOpen, setIsOpen] = useState(open);
 
   const handleFilterOpening = () => {
