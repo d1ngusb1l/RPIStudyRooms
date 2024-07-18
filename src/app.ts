@@ -202,6 +202,23 @@ const initialRooms: Rooms = {
   }
 };
 
+const floor3 = {
+  floorNum: 300,
+  noiseReports: [{timeReported: 0, noiseLevel: 0}],
+  rooms: ["332-A", "332-B", "332-C", "332-D", "332-E", 
+    "337-A", "337-B", "337-C", "337-D", "337-D", "342-B",
+    "342-C", "352-A", "352-B", "352-C", "352-D", "352-E"]
+}
+
+const floor4 = {
+  floorNum: 400,
+  noiseReports: [{timeReported: 0, noiseLevel: 0}],
+  rooms: ["423-A", "423-B", "423-C", "423-D", "423-E",
+    "424-A", "424-B", "433-A", "435-D", "437-A", "437-B",
+    "437-C", "442-A", "442-B", "442-C", "442-D", "442-E",
+    "453-A", "453-B", "453-C", "453-D", "453-E"]
+}
+
 app.get('/api/database', async(req, res: Response<Rooms>, next)=> {
   res.json(initialRooms);
 });
