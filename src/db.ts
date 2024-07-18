@@ -40,4 +40,9 @@ export async function accessDBTest() {
   }
 }
 
+export async function accessDB() {
+  const rooms = await prisma.room.findMany();
+  return rooms;
+}
+
 export default prisma;

@@ -1,31 +1,41 @@
+import {useEffect, useState} from 'react';
 import './App.css'
 import Collapsible from "./Collapsible";
+import { Type, type Static } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
+import { backendURL } from './utils';
+
+const RoomDef = Type.Object({
+  number: Type.String(),
+  status: Type.String(),
+  lastReported: Type.String()
+})
+type Room = Static<typeof RoomDef>
+const RoomArrayDef = Type.Array(RoomDef)
 
 
-const rooms = [
-  {number: 101, status: "full", lastReported: "7:08 am"},
-  {number: 102, status: "full", lastReported: "9:07 am"},
-  {number: 103, status: "empty", lastReported: "8:35 am"},
-  {number: 104, status: "empty", lastReported: "11:52 am"},
-  {number: 105, status: "empty", lastReported: "3:36 pm"},
-  {number: 106, status: "full", lastReported: "2:12 pm"},
-  {number: 107, status: "empty", lastReported: "5:31 pm"},
-  {number: 108, status: "full", lastReported: "4:46 pm"},
-  {number: 109, status: "full", lastReported: "5:11 pm"},
-  {number: 110, status: "empty", lastReported: "6:13 pm"},
-];
+function EmptyButton({ rNum }: { rNum: string }) {
 
-function EmptyButton() {
+  function handleClick() {
+    console.log(rNum);
+  }
+
   return (
-    <button>
+    <button onClick={() => handleClick}>
       Report as Empty
     </button>
   );
 }
 
-function FullButton() {
+
+function FullButton({ rNum }: { rNum: string }) {
+
+  function handleClick() {
+    console.log(rNum);
+  }
+
   return (
-    <button>
+    <button onClick={() => handleClick}>
       Report as Full
     </button>
   );
@@ -47,33 +57,54 @@ function MapButton() {
 
 
 function ListRooms() {
-  const listRooms = rooms.map(room =>
+
+  const [rooms, setRooms] = useState<Room[] | null>(null);
+
+  useEffect(() => {
+    fetch(backendURL("/api/database")).then(async (res) => {
+      const data = await res.json();
+      if (Value.Check(RoomArrayDef, data)) {
+        // We know for sure that data is of type Room[]
+        setRooms(data);
+      } else {
+        throw new Error("Invalid data");
+      }
+    })
+  }, [])
+
+  const listRooms = rooms ? rooms.map(room =>
     <li key={room.number}>
-      <Collapsible title= {room.number.toString()}>
+      <Collapsible title={room.number}>
         <p>
-            Reported as: {' ' + room.status + ' '}
-            at: {room.lastReported}
+          Reported as: {' ' + room.status + ' '}
+          at: {new Date(room.lastReported).toLocaleTimeString()}
         </p>
-        <FullButton/>
-        <EmptyButton/>
+        <FullButton rNum={room.number}/>
+        <EmptyButton rNum={room.number}/>
       </Collapsible>
     </li>
-  );
-  return <ul style={{listStyle: 'none' }}>{listRooms}</ul>;
+  ) : 'error';
+
+  return <ul style={{ listStyle: 'none' }}>{listRooms}</ul>;
 }
 
 
 function ScrollableList() {
   return (
+<<<<<<< HEAD
     <div className="scrollable-list" style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
       <ListRooms/>
+=======
+    <div style={{ height: '400px', overflow: 'scroll', overflowX: "hidden" }}>
+      <ListRooms />
+>>>>>>> bfe1f8eb5ab0c51d291ef6e25b78c5dab582d662
     </div>
   );
 }
 
-
 export default function MyApp() {
   return (
+<<<<<<< HEAD
     <body>
         <div className="flex-container">
           <header className="title">
@@ -93,5 +124,12 @@ export default function MyApp() {
           </div> 
         </div>
     </body>
+=======
+    <div>
+      <h1>List of Rooms</h1>
+      <ScrollableList />
+    </div>
+>>>>>>> bfe1f8eb5ab0c51d291ef6e25b78c5dab582d662
   );
 }
+
