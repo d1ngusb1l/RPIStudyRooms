@@ -17,24 +17,29 @@ export function isClosed(building : Building) {
 }
 
 export function statusCalculation(room : Room) {
-    /* 
-    if building.isClosed():
-        return "closed"
-    else:
-        prev = room.status
-        timeGap = (time.Now() - room.lastReported) / ...
-        level = timeGap / 30 //min
-        adjective = ""
-        case(level)
-            0:  adjective = "certainly "
-            1-2:  adjective = "likely "
-            3-4:  adjective = "possibly "
-            default (>4): return "uncertain"
-        return (adjective + prev)
+    let reportTime = new Date(room.lastReported);
+    let currentTime = new Date();
+    //time difference in milliseconds
+    let timeDiff = currentTime.getTime() - reportTime.getTime();
+    //converting to seconds
+    timeDiff /= 1000;
+    //converting to minutes
+    timeDiff /= 60;
 
-    */
+    if(room.status == "full") {
+        if(timeDiff <= 30) {return "Certainly Occupied";}
+        if(timeDiff <= 60) {return "Likely Occupied";}
+        if(timeDiff <= 90) {return "Possibly Occupied";}
+        else {return "Uncertain"}
 
-    room.lastReported.toLocaleTimeString()
+    }
+    else if(room.status == "empty") {
+        if(timeDiff <= 30) {return "Certainly Empty";}
+        if(timeDiff <= 60) {return "Likely Empty";}
+        if(timeDiff <= 90) {return "Possibly Empty";}
+        else {return "Uncertain"}
+    }
+    else {return "Closed/Reserved"}
 
 
 }

@@ -17,13 +17,22 @@ function NoiseLevelButton({ noiseNumber, currentFloor }: { noiseNumber: number, 
 }
 
 function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
-    let i = 0;
+    let noiseVal = 0;
     for (const n of cFloor.noiseReports) {
-        i += n.noiseLevel;
+        noiseVal += n.noiseLevel;
     }
-    i /= cFloor.noiseReports.length;
+    noiseVal /= cFloor.noiseReports.length;
+
+    let noiseLevel = "";
+    if(noiseVal == 0) {noiseLevel = "Unknown";}
+    else if(noiseVal <= 1.4) {noiseLevel = "Very Quiet";}
+    else if(noiseVal <= 2.4) {noiseLevel = "Quiet";}
+    else if(noiseVal <= 3.4) {noiseLevel = "Moderate";}
+    else if(noiseVal <= 4.4) {noiseLevel = "Loud";}
+    else {noiseLevel = "Very Loud"}
+
     return (
-        <p> Current noise level: {i} </p>
+        <p> Current noise level: {noiseLevel} </p>
     );
 }
 
