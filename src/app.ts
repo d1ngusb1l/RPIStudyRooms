@@ -5,8 +5,9 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import setUsersRouter from "./routes/users.js";
 import { Type, type Static } from '@sinclair/typebox'
-import { Value } from '@sinclair/typebox/value'
 import cors from "cors";
+import { ErrorType, Rooms, Room, RoomStatusEnum } from "./types.js";
+import { initialRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,62 +44,36 @@ app.listen(port, () => {
   console.log('Listening on *:' + port);
 });
 
-const RoomDef = Type.Object({
-  number: Type.String(),
-  status: Type.String(),
-  lastReported: Type.Date()
-})
-type Room = Static<typeof RoomDef>
-const RoomArrayDef = Type.Array(RoomDef)
-
-const initialRooms = [
-  { number: "332-A", status: "empty", lastReported: new Date() },
-  { number: "332-B", status: "empty", lastReported: new Date() },
-  { number: "332-C", status: "empty", lastReported: new Date() },
-  { number: "332-D", status: "empty", lastReported: new Date() },
-  { number: "332-E", status: "empty", lastReported: new Date() },
-  { number: "337-A", status: "empty", lastReported: new Date() },
-  { number: "337-B", status: "empty", lastReported: new Date() },
-  { number: "337-C", status: "empty", lastReported: new Date() },
-  { number: "337-D", status: "empty", lastReported: new Date() },
-  { number: "337-E", status: "empty", lastReported: new Date() },
-  { number: "342-B", status: "empty", lastReported: new Date() },
-  { number: "342-C", status: "empty", lastReported: new Date() },
-  { number: "352-A", status: "empty", lastReported: new Date() },
-  { number: "352-B", status: "empty", lastReported: new Date() },
-  { number: "352-C", status: "empty", lastReported: new Date() },
-  { number: "352-D", status: "empty", lastReported: new Date() },
-  { number: "352-E", status: "empty", lastReported: new Date() },
-  { number: "423-A", status: "empty", lastReported: new Date() },
-  { number: "423-B", status: "empty", lastReported: new Date() },
-  { number: "423-C", status: "empty", lastReported: new Date() },
-  { number: "423-D", status: "empty", lastReported: new Date() },
-  { number: "423-E", status: "empty", lastReported: new Date() },
-  { number: "424-A", status: "empty", lastReported: new Date() },
-  { number: "424-B", status: "empty", lastReported: new Date() },
-  { number: "433-A", status: "empty", lastReported: new Date() },
-  { number: "435-D", status: "empty", lastReported: new Date() },
-  { number: "437-A", status: "empty", lastReported: new Date() },
-  { number: "437-B", status: "empty", lastReported: new Date() },
-  { number: "437-C", status: "empty", lastReported: new Date() },
-  { number: "442-A", status: "empty", lastReported: new Date() },
-  { number: "442-B", status: "empty", lastReported: new Date() },
-  { number: "442-C", status: "empty", lastReported: new Date() },
-  { number: "442-D", status: "empty", lastReported: new Date() },
-  { number: "442-E", status: "empty", lastReported: new Date() },
-  { number: "453-A", status: "empty", lastReported: new Date() },
-  { number: "453-B", status: "empty", lastReported: new Date() },
-  { number: "453-C", status: "empty", lastReported: new Date() },
-  { number: "453-D", status: "empty", lastReported: new Date() },
-  { number: "453-E", status: "empty", lastReported: new Date() },
-];
-
-app.get('/api/database', async(req, res: Response<Room[]>, next)=> {
+app.get('/api/database', async(req, res: Response<Rooms>, next)=> {
   res.json(initialRooms);
 });
 
-app.get('/api/reportAsFull', async(req: Request, res)=> {
+app.get('/api/reportAsFull/:roomNumber', async(req, res: Response<Room | ErrorType>)=> {
+  if (!initialRooms[req.params.roomNumber]) {
+    res.status(404).json({
+      status: 404,
+      message: "Room not found."
+    });
+    return;
+  } else {
+    initialRooms[req.params.roomNumber].status = RoomStatusEnum.Full;
+    initialRooms[req.params.roomNumber].lastReported = Date.now();
+    res.json(initialRooms[req.params.roomNumber]);
+  
+  }
 })
 
-app.get('/api/reportAsEmpty', async(req: Request, res)=> {
+app.get('/api/reportAsEmpty/:roomNumber', async(req, res: Response<Room | ErrorType>)=> {
+  if (!initialRooms[req.params.roomNumber]) {
+    res.status(404).json({
+      status: 404,
+      message: "Room not found."
+    });
+    return;
+  } else {
+    initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+    initialRooms[req.params.roomNumber].lastReported = Date.now();
+    res.json(initialRooms[req.params.roomNumber]);
+  }
 })
+  

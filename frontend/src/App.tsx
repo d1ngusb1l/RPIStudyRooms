@@ -1,94 +1,49 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
-import Collapsible from "./Collapsible";
-import { Type, type Static } from '@sinclair/typebox'
-import { Value } from '@sinclair/typebox/value'
 import { backendURL } from './utils';
+import { RoomContext, Rooms, RoomsDef, validateType } from './types';
+import RoomListing from './RoomListing';
 
-const RoomDef = Type.Object({
-  number: Type.String(),
-  status: Type.String(),
-  lastReported: Type.String()
-})
-type Room = Static<typeof RoomDef>
-const RoomArrayDef = Type.Array(RoomDef)
+import logo from "./assets/rpistudyroomslogo.png";
+import mapplaceholder from "./assets/mapplaceholder.png";
 
-
-function EmptyButton({ rNum }: { rNum: string }) {
-
-  function handleClick() {
-    console.log(rNum);
-  }
-
-  return (
-    <button onClick={() => handleClick}>
-      Report as Empty
-    </button>
-  );
-}
-
-
-function FullButton({ rNum }: { rNum: string }) {
-
-  function handleClick() {
-    console.log(rNum);
-  }
-
-  return (
-    <button onClick={() => handleClick}>
-      Report as Full
-    </button>
-  );
-}
 
 function MapButton() {
 
   return (
-    <button style={{width:'10px', height:'10px'}}>
-      
+    <button style={{ width: '10px', height: '10px' }}>
+
     </button>
   );
-  
+
 }
 
 
 function ListRooms() {
 
-  const [rooms, setRooms] = useState<Room[] | null>(null);
+  const [rooms, setRooms] = useState<Rooms | null>(null);
 
   useEffect(() => {
     fetch(backendURL("/api/database")).then(async (res) => {
       const data = await res.json();
-      if (Value.Check(RoomArrayDef, data)) {
-        // We know for sure that data is of type Room[]
-        setRooms(data);
-      } else {
-        throw new Error("Invalid data");
-      }
+      setRooms(validateType(RoomsDef, data));
     })
   }, [])
 
-  const listRooms = rooms ? rooms.map(room =>
-    <li key={room.number}>
-      <Collapsible title={room.number}>
-        <p>
-          Reported as: {' ' + room.status + ' '}
-          at: {new Date(room.lastReported).toLocaleTimeString()}
-        </p>
-        <FullButton rNum={room.number}/>
-        <EmptyButton rNum={room.number}/>
-      </Collapsible>
+  const listRooms = rooms ? Object.entries(rooms).map(([roomNumber, room]) =>
+    <li key={roomNumber}>
+      <RoomListing room={room} roomNumber={roomNumber} />
     </li>
   ) : 'error';
 
-  return <ul style={{ listStyle: 'none' }}>{listRooms}</ul>;
+  return rooms !== null && <RoomContext.Provider value={{ rooms, update: setRooms }}><ul style={{ listStyle: 'none' }}>{listRooms}</ul></RoomContext.Provider>;
 }
 
 
 function ScrollableList() {
   return (
     <div className="scrollable-list" style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
-      <ListRooms/>
+      <ListRooms />
     </div>
   );
 }
@@ -107,7 +62,7 @@ export default function MyApp() {
     <body>
         <div className="flex-container">
           <header className="title">
-            <img src="/src/assets/rpistudyroomslogo.png" alt="Logo" className="logo" />
+            <img src={logo} alt="Logo" className="logo" />
             <h2>RPIStudyRooms</h2>
           </header>
           <div className="content-and-map">
@@ -121,7 +76,7 @@ export default function MyApp() {
             <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',
             }} */>
-              <img src="/src/assets/mapplaceholder.png" className='map' />
+              <img src={mapplaceholder} className='map' />
             </div>
           </div> 
         </div>

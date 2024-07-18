@@ -1,5 +1,5 @@
 import {type Express} from "express";
-import prisma from "../db.js";
+import prisma from "../prismaDb.js";
 
 /* GET users listing. */
 export default function setUsersRoutes(app: Express) {
