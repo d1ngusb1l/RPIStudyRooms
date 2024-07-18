@@ -47,3 +47,16 @@ app.get('/api/database', async(req, res: Response<Room[]>, next)=> {
   const rooms = await prisma.room.findMany();
   res.json(rooms);
 });
+
+app.get('/api/reportAsFull', async(req: Request<number>, res)=> {
+  })
+})
+
+app.get('/api/reportAsEmpty', async(req: Request<number>, res)=> {
+  prisma.room.update({
+    where: { roomNumber: req.params.valueOf()},
+    data: { reportedAsOccupied: false,
+            timeOfReport: new Date()
+     },
+  })
+})
