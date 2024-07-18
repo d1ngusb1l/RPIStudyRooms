@@ -51,10 +51,6 @@ function MapButton() {
   
 }
 
-// function maptoggle(){
-//     document.getElementById("myDIV").style.display = "none"
-// }
-
 
 function ListRooms() {
 
@@ -98,23 +94,35 @@ function ScrollableList() {
 }
 
 export default function MyApp() {
+
+  const [isActive, setIsActive] = useState(false);
+
+  const toggleMap = () => {
+
+    setIsActive(current => !current);
+
+  }
+
   return (
     <body>
         <div className="flex-container">
           <header className="title">
             <img src="/src/assets/rpistudyroomslogo.png" alt="Logo" className="logo" />
-            <h1>RPIStudyRooms</h1>
+            <h2>RPIStudyRooms</h2>
           </header>
           <div className="content-and-map">
             <div className="content">
               <div className="rooms-and-map-button">
-                <h1>List of Rooms</h1>
-                <button>Display Map</button>
-                {/* <button onClick={maptoggle} >Display Map</button> */}
+                <h2>List of Rooms</h2>
+                <button onClick={() => toggleMap}>Display Map</button>
               </div>
               <ScrollableList/>
             </div>
-            <img src="/src/assets/mapplaceholder.png" className="map"/>
+            <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
+              alignItems: isActive ? 'center' : '',
+            }} */>
+              <img src="/src/assets/mapplaceholder.png" className='map' />
+            </div>
           </div> 
         </div>
     </body>
