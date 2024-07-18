@@ -21,6 +21,8 @@ body {
   display: flex;
   flex-direction: row;
   background-color: #fff; /* to fill, at least */
+  border: 2px solid rgb(109, 109, 109);
+  border-radius: 8px;
 }
 
 .logo {
