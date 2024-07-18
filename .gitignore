@@ -133,3 +133,4 @@ dist
 .vscode/*
 !.vscode/extensions.json
 frontend/src/assets/roomStatus.pdn
+frontend/src/assets/legend.pdn
