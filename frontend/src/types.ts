@@ -1,5 +1,6 @@
 import { TSchema, Type, type Static } from '@sinclair/typebox'
-import { Value, ValueError } from '@sinclair/typebox/value'
+import { Value } from '@sinclair/typebox/value'
+import { createContext } from 'react';
 
 export const NoiseReportDef = Type.Object({
   timeReported: Type.Number(),
@@ -7,12 +8,19 @@ export const NoiseReportDef = Type.Object({
 })
 export type NoiseReport = Static<typeof NoiseReportDef>
 
+export enum RoomStatusEnum {
+  Empty = "empty",
+  Full = "full",
+}
+
+
 export const RoomDef = Type.Object({
-  number: Type.String(),
-  status: Type.String(),
-  lastReported: Type.String()
+  status: Type.Enum(RoomStatusEnum),
+  lastReported: Type.Number()
 })
+export const RoomsDef = Type.Record(Type.String(), RoomDef);
 export type Room = Static<typeof RoomDef>
+export type Rooms = Record<string, Room>
 
 export const FloorDef = Type.Object({
   number: Type.String(),
@@ -29,13 +37,21 @@ export const BuildingDef = Type.Object({
 export type Building = Static<typeof BuildingDef>
 
 
-export function validateType<T extends TSchema>(type: T, data: unknown): Static<T> {
+export function validateType<T extends TSchema>(type: T, data: unknown, shouldThrow?: true): Static<T>;
+export function validateType<T extends TSchema>(type: T, data: unknown, shouldThrow: false): Static<T> | null;
+export function validateType<T extends TSchema>(type: T, data: unknown, shouldThrow?: boolean): Static<T> | null {
   if (Value.Check(type, data)) {
     return data;
   } else {
+    if (shouldThrow){
     console.error("Got invalid data:", JSON.stringify(
       [...Value.Errors(type, data)], null, 2
     ))
     throw new Error("Invalid data.");
+  } else {
+    return null;
+  }
   }
 }
+
+export const RoomContext = createContext<{rooms: Rooms, update: (rooms: Rooms) => unknown}>({rooms: {}, update: () => {}});

@@ -1,42 +1,45 @@
-import React from "react";
+import { useContext } from "react";
 import Collapsible from "./Collapsible";
-import { Room } from "./types";
+import { Room, RoomContext, RoomDef, validateType } from "./types";
+import { backendURL } from "./utils";
 
 function EmptyButton({ rNum }: { rNum: string }) {
+  const { rooms, update } = useContext(RoomContext);
 
-    function handleClick() {
-      console.log(rNum);
-    }
-  
-    return (
-      <button onClick={() => handleClick}>
-        Report as Empty
-      </button>
-    );
-  }
-  
-  
-  function FullButton({ rNum }: { rNum: string }) {
-  
-    function handleClick() {
-      console.log(rNum);
-    }
-  
-    return (
-      <button onClick={() => handleClick}>
-        Report as Full
-      </button>
-    );
-  }
-  
+  return (
+    <button onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum)).then(async (r) => {
+      const data = await r.json();
+      const newRoom = validateType(RoomDef, data);
+      update({ ...rooms, [rNum]: newRoom });
+    })}>
+      Report as Empty
+    </button>
+  );
+}
 
-export default function RoomListing({ room }: { room: Room }) {
-    return <Collapsible title={room.number}>
+
+function FullButton({ rNum }: { rNum: string }) {
+  const { rooms, update } = useContext(RoomContext);
+
+  return (
+    <button onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum)).then(async (r) => {
+      const data = await r.json();
+      const newRoom = validateType(RoomDef, data);
+      update({ ...rooms, [rNum]: newRoom });
+    })}>
+      Report as Full
+    </button>
+  );
+}
+
+
+export default function RoomListing({ room, roomNumber }: { room: Room, roomNumber: string }) {
+  return <Collapsible title={roomNumber}>
     <p>
       Reported as: {' ' + room.status + ' '}
       at: {new Date(room.lastReported).toLocaleTimeString()}
     </p>
-    <FullButton rNum={room.number}/>
-    <EmptyButton rNum={room.number}/>
+    <FullButton rNum={roomNumber} />
+    <EmptyButton rNum={roomNumber} />
   </Collapsible>
 }

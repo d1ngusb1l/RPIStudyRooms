@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { backendURL } from './utils';
-import { Room, RoomDef, validateType } from './types';
-import { Type } from '@sinclair/typebox';
+import { RoomContext, Rooms, RoomsDef, validateType } from './types';
 import RoomListing from './RoomListing';
+
+import logo from "./assets/rpistudyroomslogo.png";
+import mapplaceholder from "./assets/mapplaceholder.png";
 
 
 function MapButton() {
@@ -23,22 +25,22 @@ function MapButton() {
 
 function ListRooms() {
 
-  const [rooms, setRooms] = useState<Room[] | null>(null);
+  const [rooms, setRooms] = useState<Rooms | null>(null);
 
   useEffect(() => {
     fetch(backendURL("/api/database")).then(async (res) => {
       const data = await res.json();
-      setRooms(validateType(Type.Array(RoomDef), data));
+      setRooms(validateType(RoomsDef, data));
     })
   }, [])
 
-  const listRooms = rooms ? rooms.map(room =>
-    <li key={room.number}>
-      <RoomListing room={room} />
+  const listRooms = rooms ? Object.entries(rooms).map(([roomNumber, room]) =>
+    <li key={roomNumber}>
+      <RoomListing room={room} roomNumber={roomNumber} />
     </li>
   ) : 'error';
 
-  return <ul style={{ listStyle: 'none' }}>{listRooms}</ul>;
+  return rooms !== null && <RoomContext.Provider value={{ rooms, update: setRooms }}><ul style={{ listStyle: 'none' }}>{listRooms}</ul></RoomContext.Provider>;
 }
 
 
@@ -55,7 +57,7 @@ export default function MyApp() {
     <body>
       <div className="flex-container">
         <header className="title">
-          <img src="/src/assets/rpistudyroomslogo.png" alt="Logo" className="logo" />
+          <img src={logo} alt="Logo" className="logo" />
           <h1>RPIStudyRooms</h1>
         </header>
         <div className="content-and-map">
@@ -67,7 +69,7 @@ export default function MyApp() {
             </div>
             <ScrollableList />
           </div>
-          <img src="/src/assets/mapplaceholder.png" className="map" />
+          <img src={mapplaceholder} className="map" />
         </div>
       </div>
     </body>
