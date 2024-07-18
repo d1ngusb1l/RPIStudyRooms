@@ -27,7 +27,6 @@ type RoomUpdateAction = { type: "single", number: string, newData: Partial<Omit<
 
 
 const initialRooms = [
-  { number: "323-A", status: "empty", lastReported: new Date() },
   { number: "332-A", status: "empty", lastReported: new Date() },
   { number: "332-B", status: "empty", lastReported: new Date() },
   { number: "332-C", status: "empty", lastReported: new Date() },
@@ -38,7 +37,6 @@ const initialRooms = [
   { number: "337-C", status: "empty", lastReported: new Date() },
   { number: "337-D", status: "empty", lastReported: new Date() },
   { number: "337-E", status: "empty", lastReported: new Date() },
-  { number: "332-A", status: "empty", lastReported: new Date() },
   { number: "342-B", status: "empty", lastReported: new Date() },
   { number: "342-C", status: "empty", lastReported: new Date() },
   { number: "352-A", status: "empty", lastReported: new Date() },
@@ -58,9 +56,6 @@ const initialRooms = [
   { number: "437-A", status: "empty", lastReported: new Date() },
   { number: "437-B", status: "empty", lastReported: new Date() },
   { number: "437-C", status: "empty", lastReported: new Date() },
-  { number: "423-A", status: "empty", lastReported: new Date() },
-  { number: "423-B", status: "empty", lastReported: new Date() },
-  { number: "423-C", status: "empty", lastReported: new Date() },
   { number: "442-A", status: "empty", lastReported: new Date() },
   { number: "442-B", status: "empty", lastReported: new Date() },
   { number: "442-C", status: "empty", lastReported: new Date() },
