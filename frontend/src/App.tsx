@@ -31,6 +31,21 @@ function FullButton() {
   );
 }
 
+function MapButton() {
+
+  return (
+    <button style={{width:'10px', height:'10px'}}>
+      
+    </button>
+  );
+  
+}
+
+// function maptoggle(){
+//     document.getElementById("myDIV").style.display = "none"
+// }
+
+
 function ListRooms() {
   const listRooms = rooms.map(room =>
     <li key={room.number}>
@@ -50,7 +65,7 @@ function ListRooms() {
 
 function ScrollableList() {
   return (
-    <div style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
+    <div className="scrollable-list" style={{ height: '800px', overflow: 'scroll', overflowX: "hidden" }}>
       <ListRooms/>
     </div>
   );
@@ -59,9 +74,24 @@ function ScrollableList() {
 
 export default function MyApp() {
   return (
-    <div>
-      <h1>List of Rooms</h1>
-        <ScrollableList/>
-    </div>
+    <body>
+        <div className="flex-container">
+          <header className="title">
+            <img src="/src/assets/rpistudyroomslogo.png" alt="Logo" className="logo" />
+            <h1>RPIStudyRooms</h1>
+          </header>
+          <div className="content-and-map">
+            <div className="content">
+              <div className="rooms-and-map-button">
+                <h1>List of Rooms</h1>
+                <button>Display Map</button>
+                {/* <button onClick={maptoggle} >Display Map</button> */}
+              </div>
+              <ScrollableList/>
+            </div>
+            <img src="/src/assets/mapplaceholder.png" className="map"/>
+          </div> 
+        </div>
+    </body>
   );
 }

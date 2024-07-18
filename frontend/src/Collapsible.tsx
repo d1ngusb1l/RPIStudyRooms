@@ -18,11 +18,15 @@ const Collapsible: React.FC<IProps> = ({ open, children, title }) => {
         <div>
           <div className="p-3 border-bottom d-flex justify-content-between">
             <h6 className="font-weight-bold">{title}</h6>
-            <button type="button" className="btn" onClick={handleFilterOpening}>
+            <button type="button" 
+            className="btn" 
+            onClick={handleFilterOpening}
+            style={{ width: '300px', height: '50px' }} 
+            >
               {!isOpen ? (
-                <img src="/assets/chevron-down.svg"></img>
+                <img src="/src/assets/chevron-down.svg" alt="expand" style={{ width: '100%', height: '100%' }} />
               ) : (
-                <img src="/assets/chevron-up.sfg"></img>
+                <img src="/src/assets/chevron-up.svg" alt="collapse" style={{ width: '100%', height: '100%' }} />
               )}
             </button>
           </div>
