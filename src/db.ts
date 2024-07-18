@@ -1,4 +1,4 @@
-import { Rooms, RoomStatusEnum } from "./types.js";
+import { Floors, Rooms, RoomStatusEnum } from "./types.js";
 
 export const initialRooms: Rooms = {
   "332-A": {
@@ -210,4 +210,9 @@ export const floor4 = {
     "453-D",
     "453-E",
   ],
+};
+
+export const floors: Floors = {
+  "3": floor3,
+  "4": floor4,
 };

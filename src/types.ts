@@ -64,6 +64,7 @@ export const FloorDef = Type.Object({
   rooms: Type.Array(Type.String())
 })
 export type Floor = Static<typeof FloorDef>
+export type Floors = Record<string, Floor>
 
 export const BuildingDef = Type.Object({
   name: Type.String(),
