@@ -71,3 +71,13 @@ export const RoomContext = createContext<{
   rooms: Rooms;
   update: (rooms: Rooms) => unknown;
 }>({ rooms: {}, update: () => {} });
+
+export const FloorsContext = createContext<{
+  floors: Floors;
+  updateFloor: (floorNum: string, floor: Floor) => unknown;
+  updateAllFloors: (floors: Floors) => unknown;
+}>({
+  floors: {},
+  updateFloor: () => {},
+  updateAllFloors: () => {},
+});
