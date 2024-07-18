@@ -4,6 +4,9 @@ import { backendURL } from './utils';
 import { RoomContext, Rooms, RoomsDef, validateType } from './types';
 import RoomListing from './RoomListing';
 
+import logo from "./assets/rpistudyroomslogo.png";
+import mapplaceholder from "./assets/mapplaceholder.png";
+
 
 function MapButton() {
 
@@ -54,7 +57,7 @@ export default function MyApp() {
     <body>
       <div className="flex-container">
         <header className="title">
-          <img src="/src/assets/rpistudyroomslogo.png" alt="Logo" className="logo" />
+          <img src={logo} alt="Logo" className="logo" />
           <h1>RPIStudyRooms</h1>
         </header>
         <div className="content-and-map">
@@ -66,7 +69,7 @@ export default function MyApp() {
             </div>
             <ScrollableList />
           </div>
-          <img src="/src/assets/mapplaceholder.png" className="map" />
+          <img src={mapplaceholder} className="map" />
         </div>
       </div>
     </body>
