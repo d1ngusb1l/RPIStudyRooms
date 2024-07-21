@@ -124,3 +124,66 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+#ceCircle {
+  position: relative;
+  background-color: #4CFF00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#leCircle {
+  position: relative;
+  background-color: #7FFF00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#peCircle {
+  position: relative;
+  background-color: #CCFF00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#uCircle {
+  position: relative;
+  background-color: #FFFF00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#poCircle {
+  position: relative;
+  background-color: #FFBB00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#loCircle {
+  position: relative;
+  background-color: #FF6A00;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+#coCircle {
+  position: relative;
+  background-color: #FF0000;
+  margin: 2px auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}

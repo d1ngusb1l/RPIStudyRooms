@@ -39,6 +39,7 @@ export function StatusCalculation(room : Room) {
         if(timeDiff <= 90) {return "Possibly Empty";}
         else {return "Uncertain"}
     }
+    else if(room.status == "In Use by a RPI Study Rooms User") {return("Certainly Occupied");}
     else {return "Closed/Reserved"}
 }
 

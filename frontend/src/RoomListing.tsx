@@ -68,7 +68,7 @@ function PersonalUseButton({ rNum }: { rNum: string }) {
 
 
 function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: string }) {
-  return <Collapsible title={roomNumber}>
+  return <Collapsible>
     <p>Reported as: {' ' + room.status + ' '}</p>
     <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
     <p>Our Estimation: {chance}</p>
@@ -78,7 +78,76 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
   </Collapsible>
 }
 
+function FormatKey({roomNum, status}: {roomNum: string, status: string}) {
+  
+  if(status == "Certainly Occupied") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "coCircle"></div>
+      </div>
+    )
+  }
 
+  if(status == "Likely Occupied") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "loCircle"></div>
+      </div>
+    )
+  }
+
+  if(status == "Possibly Occupied") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "poCircle"></div>
+      </div>
+    )
+  }
+
+  if(status == "Uncertain") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "uCircle"></div>
+      </div>
+    )
+  }
+
+  if(status == "Possibly Empty") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "peCircle"></div>
+      </div>
+    )
+  }
+
+  if(status == "Likely Empty") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "leCircle"></div>
+      </div>
+    )
+  }
+
+  if(status == "Certainly Empty") {
+    return(
+      <div>
+        <p>{roomNum}</p>
+        <div id = "ceCircle"></div>
+      </div>
+    )
+  }
+
+  return(
+    <p>{roomNum}</p>
+  )
+
+}
 
 //the big boy function that actually does the thing
 export default function ListRooms() {
@@ -135,7 +204,8 @@ export default function ListRooms() {
 
   //mapping our array to the ui element
   const listRooms = sortedRooms.map(([roomNumber, room, chance]) =>
-    <li key={roomNumber}>
+    <li key={roomNumber} >
+      <FormatKey roomNum={roomNumber} status={chance}/>
       <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
     </li>
   )

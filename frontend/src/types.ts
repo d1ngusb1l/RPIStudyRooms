@@ -11,7 +11,7 @@ export type NoiseReport = Static<typeof NoiseReportDef>;
 export enum RoomStatusEnum {
   Empty = "empty",
   Full = "full",
-  PersonalUse = "personalUse",
+  PersonalUse = "In Use by a RPI Study Rooms User",
 }
 
 export const RoomDef = Type.Object({
