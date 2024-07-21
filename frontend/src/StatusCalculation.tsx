@@ -40,6 +40,4 @@ export function statusCalculation(room : Room) {
         else {return "Uncertain"}
     }
     else {return "Closed/Reserved"}
-
-
 }

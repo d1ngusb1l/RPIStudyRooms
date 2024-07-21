@@ -49,7 +49,7 @@ app.get("/api/database", (req, res: Response<Rooms>, next) => {
   res.json(initialRooms);
 });
 
-app.get(
+app.post(
   "/api/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
     if (!initialRooms[req.params.roomNumber]) {
