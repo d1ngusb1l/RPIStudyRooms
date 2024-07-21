@@ -1,6 +1,14 @@
 import { Floors, Rooms, RoomStatusEnum } from "./types.js";
 
 export const initialRooms: Rooms = {
+  "323-A": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "323-C": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
   "332-A": {
     status: RoomStatusEnum.Empty,
     lastReported: 0,
