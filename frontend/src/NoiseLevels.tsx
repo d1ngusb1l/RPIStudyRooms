@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Floor, FloorsContext, NoiseReportDef, validateType } from "./types";
 import { backendURL } from "./utils";
 
@@ -41,9 +41,12 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
     );
 }
 
+const timeBetweenNoiseReports = 1000 * 60 * 10; // 10 minutes
+
 export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
     const { floors } = useContext(FloorsContext);
     const [lastReported, setLastReported] = useState(0);
+    const [, setCounter] = useState(0);
 
     useEffect(() => {
         const localStorageLastReported = localStorage.getItem("lastReported");
@@ -65,8 +68,20 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
     }, [lastReported]);
 
     const current = Date.now();
-    const reportedRecently = current - lastReported < (1000 * 60 * 10); // 10 minutes
-    const waitUntil = new Date(lastReported + (1000 * 60 * 10));
+    const reportedRecently = current - lastReported < (timeBetweenNoiseReports);
+    const waitUntil = useMemo(() => new Date(lastReported + (timeBetweenNoiseReports)), [lastReported]);
+
+    useEffect(() => {
+        if (reportedRecently) {
+            const timeout = setTimeout(() => {
+                setCounter((c) => c + 1);
+            }, waitUntil.getTime() - current);
+            return () => {
+                clearTimeout(timeout);
+            }
+        }
+    }, [reportedRecently, waitUntil, current]);
+
 
     return (
         <div>
