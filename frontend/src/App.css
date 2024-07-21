@@ -19,10 +19,17 @@ body {
 
 .title {
   display: flex;
+  align-items: center;
   flex-direction: row;
   background-color: #fff; /* to fill, at least */
   border: 2px solid rgb(109, 109, 109);
   border-radius: 8px;
+}
+
+.feedbacklink{
+  flex: 1;
+  text-align: right;
+  padding: 0.5em;
 }
 
 .logo {

@@ -5,6 +5,7 @@ import { Floors, FloorsContext, FloorsDef, RoomContext, Rooms, RoomsDef, validat
 import RoomListing from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 
+
 import logo from "./assets/rpistudyroomslogo.png";
 import mapplaceholder from "./assets/mapplaceholder.png";
 
@@ -74,10 +75,15 @@ export default function MyApp() {
 
   return (
     <body>
-      <div className="flex-container">
+      <div>
         <header className="title">
           <img src={logo} alt="Logo" className="logo" />
           <h2>RPIStudyRooms</h2>
+          <div className="feedbacklink">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link">
+          Come give us feedback!</a>
+          </div>
+          
         </header>
         <div className="content-and-map">
           <div className="content">
