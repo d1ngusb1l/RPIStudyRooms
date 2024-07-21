@@ -33,14 +33,27 @@ function FullButton({ rNum }: { rNum: string }) {
   );
 }
 
+const timeBetweenReminders = 1000 * 60 * 10; // 10 minutes (in ms)
+
 function PersonalUseButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
+  const [reportedAt, setReportedAt] = useState(0);
+
+  useEffect(() => {
+    const current = Date.now();
+    const timeRemaining = timeBetweenReminders - (current - reportedAt);
+    if (timeRemaining > 0) {
+      const timeout = setTimeout(() => alert("It's been 10 minutes, you should re-report yourself as in the room."), timeRemaining);
+      return () => clearTimeout(timeout);
+    }
+  }, [reportedAt]);
 
   return (
     <button onClick={() => fetch(backendURL("/api/reportAsPersonalUse/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
+      setReportedAt(Date.now());
     })}>
       Report as in Use by You
     </button>
@@ -48,7 +61,7 @@ function PersonalUseButton({ rNum }: { rNum: string }) {
 }
 
 
-function FormatRoom({ room, roomNumber, chance}: { room: Room, roomNumber: string, chance: string }) {
+function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: string }) {
   return <Collapsible title={roomNumber}>
     <p>Reported as: {' ' + room.status + ' '}</p>
     <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
@@ -82,37 +95,37 @@ export default function ListRooms() {
   let uncertainRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
   let possiblyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
   let likelyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let certainlyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number;}, string][] = [];
+  let certainlyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
 
   //iterating through our dictionary object and placing each room in the right container
   rooms ? Object.entries(rooms).forEach(room => {
     let status = StatusCalculation(room[1]);
 
     //creating a slightly larger version of the room datastructure to store the status of the room
-    let modifiedRoom: [string, { status: RoomStatusEnum; lastReported: number;}, string] 
-    = [room[0], {status: room[1].status, lastReported: room[1].lastReported}, status]; 
+    let modifiedRoom: [string, { status: RoomStatusEnum; lastReported: number; }, string]
+      = [room[0], { status: room[1].status, lastReported: room[1].lastReported }, status];
 
     //checking the status and adding the room to the appropriate group
-    if(status == "Certainly Occupied") {certainlyOccupiedRooms.push(modifiedRoom);}
-    else if(status == "Likely Occupied") {likelyOccupiedRooms.push(modifiedRoom);}
-    else if(status == "Possibly Occupied") {possiblyOccupiedRooms.push(modifiedRoom);}
-    else if(status == "Possibly Empty") {possiblyEmptyRooms.push(modifiedRoom);}
-    else if(status == "Likely Empty") {likelyEmptyRooms.push(modifiedRoom);}
-    else if(status == "Certainly Empty") {certainlyEmptyRooms.push(modifiedRoom);}
-    else {uncertainRooms.push(modifiedRoom)}
-  }): 'error' ;
+    if (status == "Certainly Occupied") { certainlyOccupiedRooms.push(modifiedRoom); }
+    else if (status == "Likely Occupied") { likelyOccupiedRooms.push(modifiedRoom); }
+    else if (status == "Possibly Occupied") { possiblyOccupiedRooms.push(modifiedRoom); }
+    else if (status == "Possibly Empty") { possiblyEmptyRooms.push(modifiedRoom); }
+    else if (status == "Likely Empty") { likelyEmptyRooms.push(modifiedRoom); }
+    else if (status == "Certainly Empty") { certainlyEmptyRooms.push(modifiedRoom); }
+    else { uncertainRooms.push(modifiedRoom) }
+  }) : 'error';
 
   //creating the array we will ultimately map our ui element onto
-  let sortedRooms: [string, { status: RoomStatusEnum; lastReported: number;}, string][] = [];
+  let sortedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
 
   //adding our rooms in order to our mappable array
-  certainlyEmptyRooms.forEach(room => { sortedRooms.push(room);});
-  likelyEmptyRooms.forEach(room => {sortedRooms.push(room);});
-  possiblyEmptyRooms.forEach(room => {sortedRooms.push(room);});
-  uncertainRooms.forEach(room => {sortedRooms.push(room);});
-  possiblyOccupiedRooms.forEach(room => {sortedRooms.push(room);});
-  likelyOccupiedRooms.forEach(room => {sortedRooms.push(room);});
-  certainlyOccupiedRooms.forEach(room => {sortedRooms.push(room);});
+  certainlyEmptyRooms.forEach(room => { sortedRooms.push(room); });
+  likelyEmptyRooms.forEach(room => { sortedRooms.push(room); });
+  possiblyEmptyRooms.forEach(room => { sortedRooms.push(room); });
+  uncertainRooms.forEach(room => { sortedRooms.push(room); });
+  possiblyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
+  likelyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
+  certainlyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
 
   //mapping our array to the ui element
   const listRooms = sortedRooms.map(([roomNumber, room, chance]) =>
