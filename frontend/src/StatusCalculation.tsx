@@ -16,7 +16,7 @@ export function isClosed(building : Building) {
     */
 }
 
-export function statusCalculation(room : Room) {
+export function StatusCalculation(room : Room) {
     let reportTime = new Date(room.lastReported);
     let currentTime = new Date();
     //time difference in milliseconds

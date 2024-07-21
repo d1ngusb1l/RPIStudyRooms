@@ -33,12 +33,11 @@ function FullButton({ rNum }: { rNum: string }) {
 }
 
 
-export default function RoomListing({ room, roomNumber }: { room: Room, roomNumber: string }) {
+export default function RoomListing({ room, roomNumber, chance}: { room: Room, roomNumber: string, chance: string }) {
   return <Collapsible title={roomNumber}>
-    <p>
-      Reported as: {' ' + room.status + ' '}
-      at: {new Date(room.lastReported).toLocaleTimeString()}
-    </p>
+    <p>Reported as: {' ' + room.status + ' '}</p>
+    <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
+    <p>Our Estimation: {chance}</p>
     <FullButton rNum={roomNumber} />
     <EmptyButton rNum={roomNumber} />
   </Collapsible>
