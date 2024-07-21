@@ -5,6 +5,8 @@ import { Floors, FloorsContext, FloorsDef, RoomContext, Rooms, RoomsDef, RoomSta
 import ListRooms from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
+import folsomFloor3 from "./assets/folsom3.png";
+import folsomFloor4 from "./assets/folsom4.png";
 import mapplaceholder from "./assets/mapplaceholder.png";
 import { stat } from 'fs';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
@@ -48,10 +50,10 @@ function FloorDropdown(){
       >
         <div className="dropdown-options">
           <MenuItem>
-            <button>4</button>
+            <button>3</button>
           </MenuItem>
           <MenuItem>
-            <button>3</button>
+            <button>4</button>
           </MenuItem>
         </div>
       </MenuItems>
@@ -114,7 +116,7 @@ export default function MyApp() {
           <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',
             }} */>
-            <img src={mapplaceholder} className='map' />
+            <img src={folsomFloor3} className='map' />
           </div>
         </div>
       </div>

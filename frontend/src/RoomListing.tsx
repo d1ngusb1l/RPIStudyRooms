@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Collapsible from "./Collapsible";
 import { Room, RoomContext, RoomDef, Rooms, RoomsDef, RoomStatusEnum, validateType } from "./types";
 import { backendURL } from "./utils";
-import { StatusCalculation, colorCalc } from "./StatusCalculation";
+import { StatusCalculation, colorCalc, adjust } from "./StatusCalculation";
 
 function EmptyButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
@@ -71,7 +71,7 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
   return <Collapsible>
     <p>Reported as: {' ' + room.status + ' '}</p>
     <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
-    <p>Our Estimation: {chance}</p>
+    <p>Our Estimation: <text style={{color: adjust(colorCalc(chance),-53), fontWeight: "bold"}} >{chance}</text></p>
     <FullButton rNum={roomNumber} />
     <EmptyButton rNum={roomNumber} />
     <PersonalUseButton rNum={roomNumber} />
