@@ -1,19 +1,66 @@
 import {Building, Room, RoomDef} from './types'
 
+const Folsom_Library = {
+    hours: {
+      monday : [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
+      tuesday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+      wednesday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+      thursday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+      friday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 17)],
+      saturday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+      sunday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+    }
+}
+
 export function isClosed(building : Building) {
-    /*
-    currentTime = time.Now()
-    day = time.DayOfTheWeek()
-
-    openingTime = building.hours[day][0]
-    closingTime = building.hours[day][1]
-
-    if(openingTime < currentTime < closingTime):
-        return true
-    else:
-        return false
-
-    */
+    let currentDate = new Date();
+    let currentTime = currentDate.getHours();
+    let day = currentDate.getDay();
+    let openingTime;
+    let closingTime;
+    let pass = true;
+    
+    switch (day) {
+        case 0:
+            openingTime = Folsom_Library.hours.sunday[0].getHours();
+            closingTime = Folsom_Library.hours.sunday[1].getHours();
+            break;
+        case 1:
+            openingTime = Folsom_Library.hours.monday[0].getHours();
+            closingTime = Folsom_Library.hours.monday[1].getHours();
+            break;
+        case 2:
+            openingTime = Folsom_Library.hours.tuesday[0].getHours();
+            closingTime = Folsom_Library.hours.tuesday[1].getHours();
+            break;
+        case 3:
+            openingTime = Folsom_Library.hours.wednesday[0].getHours();
+            closingTime = Folsom_Library.hours.wednesday[1].getHours();
+            break;
+        case 4:
+            openingTime = Folsom_Library.hours.thursday[0].getHours();
+            closingTime = Folsom_Library.hours.thursday[1].getHours();
+            break;
+        case 5:
+            openingTime = Folsom_Library.hours.friday[0].getHours();
+            closingTime = Folsom_Library.hours.friday[1].getHours();
+            break;
+        case 6:
+            openingTime = Folsom_Library.hours.sunday[0].getHours();
+            closingTime = Folsom_Library.hours.sunday[1].getHours();
+            break;
+        default:
+            openingTime = Folsom_Library.hours.sunday[0].getHours();
+            closingTime = Folsom_Library.hours.sunday[1].getHours();
+            pass = false;
+            break;
+            
+    }
+    
+    if(((openingTime < currentTime && currentTime < closingTime) || (openingTime == currentTime && currentDate.getSeconds() > 0 && currentTime < closingTime)) && pass == true) {
+        return "Open";
+    }
+    return "Closed";
 }
 
 export function StatusCalculation(room : Room) {
