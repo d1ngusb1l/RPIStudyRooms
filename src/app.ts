@@ -83,6 +83,40 @@ app.post(
   }
 );
 
+app.post(
+  "/api/reportAsEmpty/:roomNumber",
+  (req, res: Response<Room | ErrorType>) => {
+    if (!initialRooms[req.params.roomNumber]) {
+      res.status(404).json({
+        status: 404,
+        message: "Room not found.",
+      });
+      return;
+    } else {
+      initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+      initialRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(initialRooms[req.params.roomNumber]);
+    }
+  }
+);
+
+app.post(
+  "/api/reportAsPersonalUse/:roomNumber",
+  (req, res: Response<Room | ErrorType>) => {
+    if (!initialRooms[req.params.roomNumber]) {
+      res.status(404).json({
+        status: 404,
+        message: "Room not found.",
+      });
+      return;
+    } else {
+      initialRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
+      initialRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(initialRooms[req.params.roomNumber]);
+    }
+  }
+);
+
 app.get("/api/floors", (req, res: Response<Floors>) => {
   res.json(floors);
 });

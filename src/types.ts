@@ -43,6 +43,7 @@ export function validateRequestBody<T extends TSchema, ResBody>(type: T, req: Re
 export enum RoomStatusEnum {
   Empty = "empty",
   Full = "full",
+  PersonalUse = "personalUse",
 }
 
 export const RoomDef = Type.Object({
