@@ -41,3 +41,52 @@ export function StatusCalculation(room : Room) {
     }
     else {return "Closed/Reserved"}
 }
+
+export function colorCalc(status : String) {
+    switch(status) {
+        case "Certainly Empty":
+            return '#4CFF00'
+        case "Likely Empty":
+            return '#7FFF00'
+        case "Possibly Empty":
+            return '#CCFF00'
+        case "Uncertain":
+            return '#FFFF00'
+        case "Possibly Occupied":
+            return '#FFBB00'
+        case "Likely Occupied":
+            return '#FF6A00'
+        case "Certainly Occupied":
+            return '#FF0000'
+        case "Closed":
+            return '#808080'
+        case "Reserved":
+            return '#0026FF'
+        case "Available":
+            return '#4CFF00'
+        default:
+            return '#FFFFFF'
+    }
+}
+
+export function doorCalc(status : String) {
+    switch(status) {
+        case "Certainly Empty":
+            return './assets/roomOpen.png'
+        case "Likely Empty":
+            return './assets/roomLEmpty.png'
+        case "Possibly Empty":
+            return './assets/roomPEmpty.png'
+        case "Uncertain":
+            return './assets/roomUncertain.png'
+        case "Possibly Occupied":
+            return './assets/roomPOccupied.png'
+        case "Likely Occupied":
+            return './assets/roomLOccupied.png'
+        case "Available":
+            return './assets/roomOpen.png'
+        default:
+            return './assets/roomClosed.png'
+    }
+
+}

@@ -2,13 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import Collapsible from "./Collapsible";
 import { Room, RoomContext, RoomDef, Rooms, RoomsDef, RoomStatusEnum, validateType } from "./types";
 import { backendURL } from "./utils";
-import { StatusCalculation } from "./StatusCalculation";
+import { StatusCalculation, colorCalc } from "./StatusCalculation";
 
 function EmptyButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
   return (
-    <button onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
+    <button 
+      style={{backgroundColor: '#4CFF00'}}
+      onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
@@ -23,7 +25,9 @@ function FullButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
   return (
-    <button onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
+    <button 
+      style={{backgroundColor: '#FF0000'}}
+      onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
@@ -37,7 +41,9 @@ function PersonalUseButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
   return (
-    <button onClick={() => fetch(backendURL("/api/reportAsPersonalUse/" + rNum), { method: "POST" }).then(async (r) => {
+    <button 
+      style={{backgroundColor: '#FF0080'}}
+      onClick={() => fetch(backendURL("/api/reportAsPersonalUse/" + rNum), { method: "POST" }).then(async (r) => {
       const data = await r.json();
       const newRoom = validateType(RoomDef, data);
       update({ ...rooms, [rNum]: newRoom });
