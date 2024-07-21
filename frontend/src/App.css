@@ -8,7 +8,7 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevents scrolling of the entire body */
+  overflow: scroll; /* Prevents scrolling of the entire body */
   font-family: Arial, sans-serif; /* Adjust as needed */
 }
 
