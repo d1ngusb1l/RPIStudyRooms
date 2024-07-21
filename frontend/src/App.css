@@ -50,11 +50,13 @@ body {
 }
 */
 
+/* Holds the content element and the map element */
 .content-and-map {
   display: flex;
   flex-direction: row;
 }
 
+/* Holds the row of buttons element and the rooms list element*/
 .content {
   display : block;
   position: relative;
@@ -64,7 +66,8 @@ body {
   padding: 0.5em;
 }
 
-.rooms-and-map-button {
+/* Holds the row of buttons and text containers above the rooms list*/
+.buttons-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -72,14 +75,31 @@ body {
   gap : 20px;
 }
 
+/* Holds the map element */
 .map-container {
   display : flex;
   align-items: center;
 }
 
+/* Dimensions of the map image */
 .map {
   max-width: 700px;
   max-height: 500px;
+}
+
+/* Contains the elements for the "display map" button and the "floor select" dropdown menu */
+.floorbutton-and-mapdisplay{
+  display: flex;
+  flex: row;
+  align-items: center;
+  gap : 5px;
+}
+
+/* defines the border to hold the dropdown selections for floor select */
+.dropdown-options{
+  display: flex;
+  flex-direction: column;
+  border: 2px solid rgb(109, 109, 109);
 }
 
 @keyframes logo-spin {
