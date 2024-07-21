@@ -7,7 +7,8 @@ import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
 import mapplaceholder from "./assets/mapplaceholder.png";
 import { stat } from 'fs';
-
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 function MapButton() {
 
@@ -65,7 +66,7 @@ export default function MyApp() {
         </header>
         <div className="content-and-map">
           <div className="content">
-            <div className="rooms-and-map-button">
+            <div className="buttons-row">
               <h2>List of Rooms</h2>
               {floors !== null && <FloorsContext.Provider value={{
                 floors,
@@ -76,7 +77,10 @@ export default function MyApp() {
               }}>
                 <NoiseLevelReporter currentFloor={currentFloor} />
               </FloorsContext.Provider>}
-              <button onClick={() => toggleMap}>Display Map</button>
+              <div className="floorbutton-and-mapdisplay">
+                <button onClick={() => toggleMap}>Display Map</button>
+                <FloorDropdown />
+              </div>
             </div>
             <ScrollableList />
           </div>
