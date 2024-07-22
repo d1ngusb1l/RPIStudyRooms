@@ -37,7 +37,7 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
     else { noiseLevel = "Very Loud" }
 
     return (
-        <p style={{margin : '1px auto'}}> Current noise level: <text style={{fontWeight: 'bold'}}>{noiseLevel}</text> </p>
+        <p style={{ margin: '1px auto' }}> Current noise level: <text style={{ fontWeight: 'bold' }}>{noiseLevel}</text> </p>
     );
 }
 
@@ -87,7 +87,7 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
         <div>
             {reportedRecently ? (
                 <p> You have reported too recently, please wait until {waitUntil.toLocaleTimeString()} to report again. </p>
-            ) : <><div><p style={{margin : '1px auto'}}>Report Noise Level of Floor</p></div>
+            ) : <><div><p style={{ margin: '1px auto' }}>Report Noise Level of Floor</p></div>
                 <div>
                     <NoiseLevelButton noiseNumber={1} currentFloor={currentFloor} setLastReported={setLastReported} />
                     <NoiseLevelButton noiseNumber={2} currentFloor={currentFloor} setLastReported={setLastReported} />

@@ -1,28 +1,15 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { backendURL } from './utils';
-import { Floors, FloorsContext, FloorsDef, RoomContext, Rooms, RoomsDef, RoomStatusEnum, validateType } from './types';
+import { Floors, FloorsContext, FloorsDef, validateType } from './types';
 import ListRooms from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
 import folsomFloor3 from "./assets/folsom3.png";
 import folsomFloor4 from "./assets/folsom4.png";
 import legend from "./assets/legend.png"
-import { stat } from 'fs';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
-import { Menu, MenuButton } from './Menu'; 
-/* */
-
-function MapButton() {
-
-  return (
-    <button style={{ width: '10px', height: '10px' }}>
-
-    </button>
-  );
-
-}
+import { Menu, MenuButton } from './Menu';
 
 
 function ScrollableList() {
@@ -37,9 +24,9 @@ function ScrollableList() {
 }
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
-function FloorDropdown({changeFloorMap }: {changeFloorMap: (path: string) => unknown }) {
-  function f3() { changeFloorMap(folsomFloor3); }
-  function f4() { changeFloorMap(folsomFloor4); }
+function FloorDropdown({ setCurrentFloor }: { setCurrentFloor: (floor: "3" | "4") => unknown }) {
+  function f3() { setCurrentFloor("3"); }
+  function f4() { setCurrentFloor("4"); }
 
   return (
     <Menu outerLabel="Floors">
@@ -49,10 +36,14 @@ function FloorDropdown({changeFloorMap }: {changeFloorMap: (path: string) => unk
   )
 }
 
+const floorMapURLs = {
+  "3": folsomFloor3,
+  "4": folsomFloor4
+} as const;
+
 export default function MyApp() {
   const [floors, setFloors] = useState<Floors | null>(null);
-  const [currentFloor, setCurrentFloor] = useState("3");
-  const [floorMap, changeFloorMap] = useState(folsomFloor3);
+  const [currentFloor, setCurrentFloor] = useState<"3" | "4">("3");
 
   const [isActive, setIsActive] = useState(true);
   const [isLegendActive, setLegendIsActive] = useState(true);
@@ -75,7 +66,7 @@ export default function MyApp() {
       setFloors(validateType(FloorsDef, data));
     })
   }, []);
-  
+
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
     return (
@@ -101,8 +92,8 @@ export default function MyApp() {
         </header>
         <div className="content-and-map">
           <div className="content">
-            <div className="legend-without-map" style={{display : (isLegendActive && !isActive) ? 'flex' : 'none'}}>
-              <img src={legend} className='legend'/>
+            <div className="legend-without-map" style={{ display: (isLegendActive && !isActive) ? 'flex' : 'none' }}>
+              <img src={legend} className='legend' />
             </div>
             <div className="buttons-row">
               {floors !== null && <FloorsContext.Provider value={{
@@ -112,9 +103,9 @@ export default function MyApp() {
                   setFloors({ ...floors, [floorNum]: floor });
                 }
               }}>
-              <div className='noise-level'>
-                <NoiseLevelReporter currentFloor={currentFloor} />
-              </div>
+                <div className='noise-level'>
+                  <NoiseLevelReporter currentFloor={currentFloor} />
+                </div>
               </FloorsContext.Provider>}
               <div className="floorbutton-and-legend-display">
                 <button onClick={toggleMap}>Display Map</button>
@@ -123,23 +114,23 @@ export default function MyApp() {
             </div>
             <div className="list-header">
               <h2>List of Rooms</h2>
-              <FloorDropdown changeFloorMap={changeFloorMap} />
+              <FloorDropdown setCurrentFloor={setCurrentFloor} />
             </div>
 
             <ScrollableList />
           </div>
-          <div className='map-container' style={{display : isActive ? 'flex' : 'none'}} /*style={{display : isActive ? 'flex' : 'none',
+          <div className='map-container' style={{ display: isActive ? 'flex' : 'none' }} /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',}} */>
             <TransformWrapper>
               <div className='map-canvas' >
-                <div className='controller'/*style={{outline: 'auto'}} */><Controls/></div>
+                <div className='controller'/*style={{outline: 'auto'}} */><Controls /></div>
                 <div className='canvas'>
                   <TransformComponent>
-                    <img src={floorMap} className='map'/>
+                    <img src={floorMapURLs[currentFloor]} className='map' />
                   </TransformComponent>
                 </div>
               </div>
-              <img src={legend} className='legend' style={{display : isLegendActive ? 'flex' : 'none'}}/>
+              <img src={legend} className='legend' style={{ display: isLegendActive ? 'flex' : 'none' }} />
             </TransformWrapper>
           </div>
         </div>

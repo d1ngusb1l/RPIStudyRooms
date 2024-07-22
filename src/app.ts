@@ -1,5 +1,5 @@
 import express, { Request, Response, type Express } from "express";
-import dotenv from "dotenv";
+import "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
