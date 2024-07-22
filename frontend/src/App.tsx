@@ -7,8 +7,6 @@ import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
 import folsomFloor3 from "./assets/folsom3.png";
 import folsomFloor4 from "./assets/folsom4.png";
-import mapplaceholder from "./assets/mapplaceholder.png";
-import { stat } from 'fs';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
@@ -35,7 +33,10 @@ function ScrollableList() {
 }
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
-function FloorDropdown(){
+function FloorDropdown({floorMap, changeFloorMap}: {floorMap: string, changeFloorMap: (path: string) => unknown}){
+  function f3() { changeFloorMap(folsomFloor3);}
+  function f4() {changeFloorMap(folsomFloor4);}
+  
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -50,10 +51,10 @@ function FloorDropdown(){
       >
         <div className="dropdown-options">
           <MenuItem>
-            <button>3</button>
+            <button onClick={f3}>3</button>
           </MenuItem>
           <MenuItem>
-            <button>4</button>
+            <button onClick={f4}>4</button>
           </MenuItem>
         </div>
       </MenuItems>
@@ -64,6 +65,8 @@ function FloorDropdown(){
 export default function MyApp() {
   const [floors, setFloors] = useState<Floors | null>(null);
   const [currentFloor, setCurrentFloor] = useState("3");
+
+  const[floorMap, changeFloorMap] = useState(folsomFloor3);
 
   const [isActive, setIsActive] = useState(false);
 
@@ -108,7 +111,7 @@ export default function MyApp() {
               </FloorsContext.Provider>}
               <div className="floorbutton-and-mapdisplay">
                 <button onClick={() => toggleMap}>Display Map</button>
-                <FloorDropdown />
+                <FloorDropdown changeFloorMap={changeFloorMap}/>
               </div>
             </div>
             <ScrollableList />
@@ -116,7 +119,7 @@ export default function MyApp() {
           <div className='map-container' /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',
             }} */>
-            <img src={folsomFloor3} className='map' />
+            <img src={floorMap} className='map' />
           </div>
         </div>
       </div>

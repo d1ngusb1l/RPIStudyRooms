@@ -12,7 +12,7 @@ const Folsom_Library = {
     }
 }
 
-export function isClosed(building : Building) {
+export function isClosed() {
     let currentDate = new Date();
     let currentTime = currentDate.getHours();
     let day = currentDate.getDay();
