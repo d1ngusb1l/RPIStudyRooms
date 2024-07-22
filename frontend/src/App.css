@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1.0rem;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif; /* Adjust as needed */
 }
 
-.larger-vert-body > div{
+.larger-vert-body > div {
   display: flex;
   flex-direction: column;
 }
@@ -26,7 +26,7 @@ body {
   border-radius: 8px;
 }
 
-.feedbacklink{
+.feedbacklink {
   flex: 1;
   text-align: right;
   padding: 0.5em;
@@ -58,7 +58,7 @@ body {
 
 /* Holds the row of buttons element and the rooms list element*/
 .content {
-  display : block;
+  display: block;
   position: relative;
   align-items: center;
   margin: 0 auto;
@@ -72,12 +72,12 @@ body {
   flex-direction: row;
   align-items: center;
   align-content: center;
-  gap : 20px;
+  gap: 20px;
 }
 
 /* Holds the map element */
 .map-container {
-  display : flex;
+  display: flex;
   align-items: center;
 }
 
@@ -88,15 +88,15 @@ body {
 }
 
 /* Contains the elements for the "display map" button and the "floor select" dropdown menu */
-.floorbutton-and-mapdisplay{
+.floorbutton-and-mapdisplay {
   display: flex;
   flex: row;
   align-items: center;
-  gap : 5px;
+  gap: 5px;
 }
 
 /* defines the border to hold the dropdown selections for floor select */
-.dropdown-options{
+.dropdown-options {
   display: flex;
   flex-direction: column;
   border: 2px solid rgb(109, 109, 109);
@@ -127,7 +127,7 @@ body {
 
 #ceCircle {
   position: relative;
-  background-color: #4CFF00;
+  background-color: #4cff00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -136,7 +136,7 @@ body {
 
 #leCircle {
   position: relative;
-  background-color: #7FFF00;
+  background-color: #7fff00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -145,7 +145,7 @@ body {
 
 #peCircle {
   position: relative;
-  background-color: #CCFF00;
+  background-color: #ccff00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -154,7 +154,7 @@ body {
 
 #uCircle {
   position: relative;
-  background-color: #FFFF00;
+  background-color: #ffff00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -163,7 +163,7 @@ body {
 
 #poCircle {
   position: relative;
-  background-color: #FFBB00;
+  background-color: #ffbb00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -172,7 +172,7 @@ body {
 
 #loCircle {
   position: relative;
-  background-color: #FF6A00;
+  background-color: #ff6a00;
   margin: 2px auto;
   width: 20px;
   height: 20px;
@@ -181,9 +181,24 @@ body {
 
 #coCircle {
   position: relative;
-  background-color: #FF0000;
+  background-color: #ff0000;
   margin: 2px auto;
   width: 20px;
   height: 20px;
   border-radius: 10px;
+}
+
+.menu-heading-button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-bottom: 10px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  gap: 5px;
 }
