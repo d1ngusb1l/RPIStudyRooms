@@ -37,7 +37,7 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
     else { noiseLevel = "Very Loud" }
 
     return (
-        <p style={{margin : '1px auto'}}> Current noise level: {noiseLevel} </p>
+        <p style={{margin : '1px auto'}}> Current noise level: <text style={{fontWeight: 'bold'}}>{noiseLevel}</text> </p>
     );
 }
 

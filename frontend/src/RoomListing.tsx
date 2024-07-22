@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Collapsible from "./Collapsible";
 import { Room, RoomContext, RoomDef, Rooms, RoomsDef, RoomStatusEnum, validateType } from "./types";
 import { backendURL } from "./utils";
-import { StatusCalculation, colorCalc, adjust } from "./StatusCalculation";
+import { StatusCalculation, colorCalc, adjust, doorCalc } from "./StatusCalculation";
 
 function EmptyButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
@@ -79,74 +79,18 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
 }
 
 function FormatKey({roomNum, status}: {roomNum: string, status: string}) {
-  
-  if(status == "Certainly Occupied") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "coCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Likely Occupied") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "loCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Possibly Occupied") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "poCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Uncertain") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "uCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Possibly Empty") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "peCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Likely Empty") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "leCircle"></div>
-      </div>
-    )
-  }
-
-  if(status == "Certainly Empty") {
-    return(
-      <div>
-        <p>{roomNum}</p>
-        <div id = "ceCircle"></div>
-      </div>
-    )
-  }
+  const doorIcon = doorCalc(status);
 
   return(
-    <p>{roomNum}</p>
+    <div>
+        <div className="room-header">
+          <div id = "circle" style={{backgroundColor : colorCalc(status)}} ></div>  
+          <img src={doorIcon} className='doorIcon' />
+           <p style={{fontWeight: "bold"}}>{roomNum}</p>
+        </div>
+    </div>
   )
-
+  
 }
 
 //the big boy function that actually does the thing
@@ -204,10 +148,12 @@ export default function ListRooms() {
 
   //mapping our array to the ui element
   const listRooms = sortedRooms.map(([roomNumber, room, chance]) =>
-    <li key={roomNumber} >
-      <FormatKey roomNum={roomNumber} status={chance}/>
-      <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
-    </li>
+    <div className="room-box">
+      <li key={roomNumber} >
+        <FormatKey roomNum={roomNumber} status={chance}/>
+        <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
+      </li>
+    </div>
   )
 
   //returning our list of rooms

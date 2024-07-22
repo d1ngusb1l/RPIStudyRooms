@@ -1,4 +1,11 @@
 import {Building, Room, RoomDef} from './types'
+import roomOpen from './assets/roomOpen.png';
+import roomLEmpty from './assets/roomLEmpty.png';
+import roomPEmpty from './assets/roomPEmpty.png';
+import roomUncertain from './assets/roomUncertain.png';
+import roomPOccupied from './assets/roomPOccupied.png';
+import roomLOccupied from './assets/roomLOccupied.png';
+import roomClosed from './assets/roomClosed.png';
 
 const Folsom_Library = {
     hours: {
@@ -117,27 +124,27 @@ export function colorCalc(status : String) {
     }
 }
 
-export function doorCalc(status : String) {
-    switch(status) {
-        case "Certainly Empty":
-            return './assets/roomOpen.png'
-        case "Likely Empty":
-            return './assets/roomLEmpty.png'
-        case "Possibly Empty":
-            return './assets/roomPEmpty.png'
-        case "Uncertain":
-            return './assets/roomUncertain.png'
-        case "Possibly Occupied":
-            return './assets/roomPOccupied.png'
-        case "Likely Occupied":
-            return './assets/roomLOccupied.png'
-        case "Available":
-            return './assets/roomOpen.png'
-        default:
-            return './assets/roomClosed.png'
+export function doorCalc(status: string) {
+    switch (status) {
+      case "Certainly Empty":
+        return roomOpen;
+      case "Likely Empty":
+        return roomLEmpty;
+      case "Possibly Empty":
+        return roomPEmpty;
+      case "Uncertain":
+        return roomUncertain;
+      case "Possibly Occupied":
+        return roomPOccupied;
+      case "Likely Occupied":
+        return roomLOccupied;
+      case "Available":
+        return roomOpen;
+      default:
+        return roomClosed;
     }
-
 }
+
 
 export function adjust(color : String, amount : number) {
     return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));

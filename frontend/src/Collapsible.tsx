@@ -4,9 +4,10 @@ import chevronDown from "./assets/chevron-down.svg";
 import chevronUp from "./assets/chevron-up.svg";
 interface IProps {
   open?: boolean;
+  title: string;
 }
 
-const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children}) => {
+const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children, title }) => {
   const [isOpen, setIsOpen] = useState(open);
 
   const handleFilterOpening = () => {
@@ -18,6 +19,7 @@ const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children
       <div className="card">
         <div>
           <div className="p-3 border-bottom d-flex justify-content-between">
+            <h6 className="font-weight-bold">{title}</h6>
             <button type="button"
               className="btn"
               onClick={handleFilterOpening}
