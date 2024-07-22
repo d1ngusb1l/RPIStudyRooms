@@ -6,7 +6,7 @@ services:
     volumes:
       - ./frontend/src:/app/frontend/src
     environment:
-      - VITE_BACKEND_URL=http://localhost:5001
+      - VITE_BACKEND_URL_PORT=5001
     depends_on:
       - backend
   backend:
@@ -19,7 +19,7 @@ services:
       - ./src:/app/src
     environment:
       - DATABASE_URL=postgresql://rpistudyrooms:rpistudyrooms@db:5432/rpistudyrooms
-      - FRONTEND_ORIGIN=http://localhost:5173
+      - PORT=5001
     depends_on:
       - db
   db:

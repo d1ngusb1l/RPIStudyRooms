@@ -1,3 +1,5 @@
 export function backendURL(path: string) {
-    return import.meta.env.VITE_BACKEND_URL + path;
+  return `${window.location.protocol}//${window.location.hostname}:${
+    import.meta.env.VITE_BACKEND_URL_PORT
+  }${path}`;
 }
