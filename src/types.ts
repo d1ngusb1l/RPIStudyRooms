@@ -44,6 +44,7 @@ export enum RoomStatusEnum {
   Empty = "empty",
   Full = "full",
   PersonalUse = "In Use by a RPI Study Rooms User",
+  Closed = "closed",
 }
 
 export const RoomDef = Type.Object({

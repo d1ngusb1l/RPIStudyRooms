@@ -26,14 +26,15 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
         noiseVal += n.noiseLevel;
     }
     if (dummyDataPresent && cFloor.noiseReports.length > 1) { noiseVal /= (cFloor.noiseReports.length - 1) }
+    else if(cFloor.noiseReports.length == 0) {noiseVal = 0;}
     else { noiseVal /= cFloor.noiseReports.length; }
 
     let noiseLevel = "";
     if (noiseVal == 0) { noiseLevel = "Unknown"; }
-    else if (noiseVal <= 1.4) { noiseLevel = "Very Quiet"; }
-    else if (noiseVal <= 2.4) { noiseLevel = "Quiet"; }
-    else if (noiseVal <= 3.4) { noiseLevel = "Moderate"; }
-    else if (noiseVal <= 4.4) { noiseLevel = "Loud"; }
+    else if (noiseVal < 1.5) { noiseLevel = "Very Quiet"; }
+    else if (noiseVal < 2.5) { noiseLevel = "Quiet"; }
+    else if (noiseVal < 3.5) { noiseLevel = "Moderate"; }
+    else if (noiseVal < 4.5) { noiseLevel = "Loud"; }
     else { noiseLevel = "Very Loud" }
 
     return (
