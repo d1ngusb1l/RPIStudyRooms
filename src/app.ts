@@ -111,23 +111,23 @@ function isClosed() {
 function dbCleanup() {
   //getting rid of noise reports that are more
   //than an hour old
-  let nrOld = floors.floor3.noiseReports;
+  let nrOld = floors["3"].noiseReports;
   let nrNew = [];
   for(let i = 0; i < nrOld.length; i++ ) {
     if(Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
-  floors.floor3.noiseReports = nrNew;
+  floors["3"].noiseReports = nrNew;
 
-  nrOld = floors.floor4.noiseReports;
+  nrOld = floors["4"].noiseReports;
   nrNew = [];
   for(let i = 0; i < nrOld.length; i++ ) {
     if(Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
-  floors.floor4.noiseReports = nrNew;
+  floors["4"].noiseReports = nrNew;
 
   //setting rooms as closed when library is closed
   if(isClosed()) {
@@ -143,6 +143,8 @@ function dbCleanup() {
       info.lastReported = Date.now();
     }
   }
+
+  console.log("cleanup performed sucessfully!");
 }
 
 app.listen(port, () => {
