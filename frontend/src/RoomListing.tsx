@@ -68,7 +68,7 @@ function PersonalUseButton({ rNum }: { rNum: string }) {
 
 
 function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: string }) {
-  return <Collapsible>
+  return <Collapsible title={""}>
     <p>Reported as: {' ' + room.status + ' '}</p>
     <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
     <p>Our Estimation: <text style={{color: adjust(colorCalc(chance),-53), fontWeight: "bold"}} >{chance}</text></p>
@@ -115,6 +115,7 @@ export default function ListRooms() {
   let possiblyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
   let likelyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
   let certainlyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
+  let closedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
 
   //iterating through our dictionary object and placing each room in the right container
   rooms ? Object.entries(rooms).forEach(room => {
@@ -131,6 +132,7 @@ export default function ListRooms() {
     else if (status == "Possibly Empty") { possiblyEmptyRooms.push(modifiedRoom); }
     else if (status == "Likely Empty") { likelyEmptyRooms.push(modifiedRoom); }
     else if (status == "Certainly Empty") { certainlyEmptyRooms.push(modifiedRoom); }
+    else if (status == "Closed/Reserved") { closedRooms.push(modifiedRoom); }
     else { uncertainRooms.push(modifiedRoom) }
   }) : 'error';
 
@@ -145,6 +147,7 @@ export default function ListRooms() {
   possiblyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
   likelyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
   certainlyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
+  closedRooms.forEach(room => { sortedRooms.push(room); })
 
   //mapping our array to the ui element
   const listRooms = sortedRooms.map(([roomNumber, room, chance]) =>
