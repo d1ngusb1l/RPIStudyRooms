@@ -93,6 +93,15 @@ export default function MyApp() {
         <header className="title">
           <img src={logo} alt="Logo" className="logo" />
           <h2>RPIStudyRooms</h2>
+
+
+          <div className="floorbutton-and-legend-display">
+                <button onClick={toggleMap}>Display Map</button>
+                <button onClick={toggleLegend}>Display Legend</button>
+          </div>
+
+
+          
           <div className="feedbacklink">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link">
               Come give us feedback!</a>
@@ -116,10 +125,6 @@ export default function MyApp() {
                 <NoiseLevelReporter currentFloor={currentFloor} />
               </div>
               </FloorsContext.Provider>}
-              <div className="floorbutton-and-legend-display">
-                <button onClick={toggleMap}>Display Map</button>
-                <button onClick={toggleLegend}>Display Legend</button>
-              </div>
             </div>
             <div className="list-header">
               <h2>List of Rooms</h2>
