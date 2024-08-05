@@ -224,3 +224,108 @@ export const floors: Floors = {
   "3": floor3,
   "4": floor4,
 };
+
+
+export const bartonRooms: Rooms = {
+  "1108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2004": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2006": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2008": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3004": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3006": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3008": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "4108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "4308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+
+};
+
+export const bartonFloor1 = {
+  floorNum: 1000,
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+  rooms: [
+    "1108",
+  ],
+};
+
+export const bartonFloor2 = {
+  floorNum: 2000,
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+  rooms: [
+    "2004",
+    "2006",
+    "2008",
+    "2108",
+    "2308",
+  ],
+};
+
+export const bartonFloor3 = {
+  floorNum: 3000,
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+  rooms: [
+    "3004",
+    "3006",
+    "3008",
+    "3108",
+    "3308",
+  ],
+};
+
+export const bartonFloor4 = {
+  floorNum: 4000,
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+  rooms: [
+    "4108",
+    "4308",
+  ],
+};
+
+export const bartonFloors: Floors = {
+  "1": bartonFloor1,
+  "2": bartonFloor2,
+  "3": bartonFloor3,
+  "4": bartonFloor4,
+};
