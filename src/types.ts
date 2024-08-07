@@ -69,7 +69,7 @@ export const FloorsDef = Type.Record(Type.String(), FloorDef);
 export type Floors = Record<string, Floor>
 
 export const BuildingDef = Type.Object({
-  rooms: Type.Record(Type.String(), RoomDef),
+  rooms: RoomsDef,
   floors: Type.Record(Type.String(), FloorDef)
 })
 export type Building = Static<typeof BuildingDef>

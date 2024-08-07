@@ -31,7 +31,7 @@ export const FloorsDef = Type.Record(Type.String(), FloorDef);
 export type Floors = Record<string, Floor>
 
 export const BuildingDef = Type.Object({
-  rooms: Type.Record(Type.String(), RoomDef),
+  rooms: RoomsDef,
   floors: Type.Record(Type.String(), FloorDef)
 })
 export type Building = Static<typeof BuildingDef>
@@ -55,12 +55,14 @@ export function validateType<T extends TSchema>(
     return data;
   } else {
     if (shouldThrow || shouldThrow === undefined) {
+      console.log("test");
       console.error(
         "Got invalid data:",
         JSON.stringify([...Value.Errors(type, data)], null, 2)
       );
       throw new Error("Invalid data.");
     } else {
+      console.log("test2");
       return null;
     }
   }
@@ -82,7 +84,9 @@ export const FloorsContext = createContext<{
 });
 
 //will eventually replace the need for a floor or rooms context as everything can be accessed through the building
+/*
 export const BuidlingContext = createContext<{
   rooms: Rooms;
   update: (rooms: Rooms) => unknown;
 }>({ rooms: {}, update: () => {} });
+ */

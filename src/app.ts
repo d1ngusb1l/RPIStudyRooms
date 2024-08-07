@@ -157,23 +157,23 @@ app.get("/api/database", (req, res: Response<Rooms>, next) => {
   res.json(folsomRooms);
 });
 
-app.get("/api/folsomeLibrary", (req, res: Response<Building>, next) => {
+app.get("/api/folsomLibrary", (req, res: Response<Building>, next) => {
   res.json(folsomLibrary);
 });
 
 app.post(
   "/api/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomRooms[req.params.roomNumber]) {
+    if (!folsomLibrary.rooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.Full;
-      folsomRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(folsomRooms[req.params.roomNumber]);
+      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Full;
+      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomLibrary.rooms[req.params.roomNumber]);
     }
   }
 );
@@ -181,16 +181,17 @@ app.post(
 app.post(
   "/api/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomRooms[req.params.roomNumber]) {
+    if (!folsomLibrary.rooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      folsomRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(folsomRooms[req.params.roomNumber]);
+      console.log("test???");
+      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomLibrary.rooms[req.params.roomNumber]);
     }
   }
 );

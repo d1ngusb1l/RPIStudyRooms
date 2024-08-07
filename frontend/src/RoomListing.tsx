@@ -72,11 +72,10 @@ function SubmitStatusButton({rNum, currentStatus, setCurrentStatus} :
       );
       
     case "In Use by Me":
-      console.log("This is not yet implimented!!!");
       return(<p>TO DO!!!!!!</p>);
 
     default:
-      console.log("error!!!");
+      //for when user has nothing selected
       return(<div></div>);
   }
 }
