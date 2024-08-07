@@ -3,7 +3,50 @@ import { Floor, FloorsContext, NoiseReportDef, validateType } from "./types";
 import { backendURL } from "./utils";
 
 
-function NoiseLevelButton({ noiseNumber, currentFloor, setLastReported }: { noiseNumber: number, currentFloor: string, setLastReported: (time: number) => unknown }) {
+
+//radio button alternative to 
+//regular buttons from before
+function NoiseLevelRadioInput ({noiseNumber, selectedNoiseLevel, setSelectedNoiseLevel} : 
+    {noiseNumber : number, selectedNoiseLevel : number, setSelectedNoiseLevel: (noiseLevel: number) => unknown}) {
+
+    let noiseText = "";
+
+    switch(noiseNumber) {
+        case 1:
+          noiseText = "Very Quiet";
+          break;
+        case 2:
+          noiseText = "Quiet";
+          break;
+        case 3:
+            noiseText = "Moderate";
+            break;
+        case 4:
+            noiseText = "Loud";
+            break;
+        case 5:
+            noiseText = "Very Loud";
+            break;
+        default:
+            noiseText = "error"
+    }
+    
+    return (
+        <div>
+            <label>
+                <input
+                    type="radio"
+                    checked={selectedNoiseLevel == noiseNumber}
+                    onChange={() => {setSelectedNoiseLevel(noiseNumber); console.log(noiseNumber)}}
+                />
+            {noiseText}
+            </label>
+        </div>
+    );
+}
+
+//button for submitting the currently selected noise
+function SubmitButton({ noiseNumber, currentFloor, setLastReported }: { noiseNumber: number, currentFloor: string, setLastReported: (time: number) => unknown }) {
     const { floors, updateFloor } = useContext(FloorsContext);
     return (
         <button onClick={() => fetch(backendURL(`/api/addNoiseReport/${currentFloor}/${noiseNumber}`), { method: "POST" }).then(async (r) => {
@@ -13,11 +56,13 @@ function NoiseLevelButton({ noiseNumber, currentFloor, setLastReported }: { nois
             updateFloor(currentFloor, newFloor);
             setLastReported(Date.now());
         })}>
-            {noiseNumber}
+            Submit
         </button>
     );
 }
 
+
+//component which says current noise level of floor
 function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
     let noiseVal = 0;
     let dummyDataPresent = false;
@@ -38,17 +83,25 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
     else { noiseLevel = "Very Loud" }
 
     return (
-        <p style={{ margin: '1px auto' }}> Current noise level: <text style={{ fontWeight: 'bold' }}>{noiseLevel}</text> </p>
+        <p style={{ margin: '1px auto' }}> Current noise level: <text style={{ fontWeight: 'bold' }}>{noiseLevel} </text> </p>
     );
 }
 
+
+//constant for the cooldown between nosie reports
 const timeBetweenNoiseReports = 1000 * 60 * 10; // 10 minutes
 
+
+//the main react component from this function
 export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
     const { floors } = useContext(FloorsContext);
+
+    //react hooks for keeping track of when the last report was made
     const [lastReported, setLastReported] = useState(0);
     const [, setCounter] = useState(0);
 
+
+    //aoyan special, idk wtf any of this does but it makes last reported work
     useEffect(() => {
         const localStorageLastReported = localStorage.getItem("lastReported");
         if (localStorageLastReported) {
@@ -68,6 +121,8 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
         }
     }, [lastReported]);
 
+
+    //timers for determining when the last report was made
     const current = Date.now();
     const reportedRecently = current - lastReported < (timeBetweenNoiseReports);
     const waitUntil = useMemo(() => new Date(lastReported + (timeBetweenNoiseReports)), [lastReported]);
@@ -83,20 +138,26 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
         }
     }, [reportedRecently, waitUntil, current]);
 
+    
+    //react hook for keeping track of the currently reported noise level
+    const [selectedNoiseLevel, setSelectedNoiseLevel] = useState(0);
 
     return (
+
         <div>
             {reportedRecently ? (
                 <p> You have reported too recently, please wait until {waitUntil.toLocaleTimeString()} to report again. </p>
             ) : <><div><p style={{ margin: '1px auto' }}>Report Noise Level of Floor</p></div>
                 <div>
-                    <NoiseLevelButton noiseNumber={1} currentFloor={currentFloor} setLastReported={setLastReported} />
-                    <NoiseLevelButton noiseNumber={2} currentFloor={currentFloor} setLastReported={setLastReported} />
-                    <NoiseLevelButton noiseNumber={3} currentFloor={currentFloor} setLastReported={setLastReported} />
-                    <NoiseLevelButton noiseNumber={4} currentFloor={currentFloor} setLastReported={setLastReported} />
-                    <NoiseLevelButton noiseNumber={5} currentFloor={currentFloor} setLastReported={setLastReported} />
+                        <NoiseLevelRadioInput noiseNumber={1} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
+                        <NoiseLevelRadioInput noiseNumber={2} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
+                        <NoiseLevelRadioInput noiseNumber={3} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
+                        <NoiseLevelRadioInput noiseNumber={4} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
+                        <NoiseLevelRadioInput noiseNumber={5} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
+                        <SubmitButton noiseNumber={selectedNoiseLevel} currentFloor={currentFloor} setLastReported={setLastReported} />
                 </div>
             </>}
+
             <div>
                 <CalculateCurrentNoiseLevel cFloor={floors[currentFloor]} />
             </div>
