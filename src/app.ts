@@ -14,8 +14,9 @@ import {
   Floor,
   NoiseReport,
   NoiseReportDef,
+  Building,
 } from "./types.js";
-import { floors, initialRooms } from "./db.js";
+import { floors, folsomLibrary, folsomRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -131,14 +132,14 @@ function dbCleanup() {
 
   //setting rooms as closed when library is closed
   if(isClosed()) {
-    for( const [roomNum, info] of Object.entries(initialRooms)) {
+    for( const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Closed;
       info.lastReported = Date.now();
     }
     displayAsClosed = true;
   }
   else if(displayAsClosed) {
-    for( const [roomNum, info] of Object.entries(initialRooms)) {
+    for( const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Empty;
       info.lastReported = Date.now();
     }
@@ -153,22 +154,26 @@ app.listen(port, () => {
 });
 
 app.get("/api/database", (req, res: Response<Rooms>, next) => {
-  res.json(initialRooms);
+  res.json(folsomRooms);
+});
+
+app.get("/api/folsomeLibrary", (req, res: Response<Building>, next) => {
+  res.json(folsomLibrary);
 });
 
 app.post(
   "/api/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!initialRooms[req.params.roomNumber]) {
+    if (!folsomRooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      initialRooms[req.params.roomNumber].status = RoomStatusEnum.Full;
-      initialRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(initialRooms[req.params.roomNumber]);
+      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.Full;
+      folsomRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomRooms[req.params.roomNumber]);
     }
   }
 );
@@ -176,16 +181,16 @@ app.post(
 app.post(
   "/api/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!initialRooms[req.params.roomNumber]) {
+    if (!folsomRooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      initialRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(initialRooms[req.params.roomNumber]);
+      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+      folsomRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomRooms[req.params.roomNumber]);
     }
   }
 );
@@ -193,16 +198,16 @@ app.post(
 app.post(
   "/api/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!initialRooms[req.params.roomNumber]) {
+    if (!folsomRooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      initialRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(initialRooms[req.params.roomNumber]);
+      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+      folsomRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomRooms[req.params.roomNumber]);
     }
   }
 );
@@ -210,16 +215,16 @@ app.post(
 app.post(
   "/api/reportAsPersonalUse/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!initialRooms[req.params.roomNumber]) {
+    if (!folsomRooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      initialRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
-      initialRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(initialRooms[req.params.roomNumber]);
+      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
+      folsomRooms[req.params.roomNumber].lastReported = Date.now();
+      res.json(folsomRooms[req.params.roomNumber]);
     }
   }
 );

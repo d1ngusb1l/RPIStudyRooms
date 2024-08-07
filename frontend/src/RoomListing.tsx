@@ -177,17 +177,18 @@ function FormatKey({roomNum, status}: {roomNum: string, status: string}) {
 }
 
 //the big boy function that actually does the thing
-export default function ListRooms() {
-  //grabbing our room object from the back end
-  const [rooms, setRooms] = useState<Rooms | null>(null);
+export default function ListRooms({rooms}: {rooms : Rooms}) {
+  //react hook for updating rooms
+  const [, setRooms] = useState<Rooms | null>(null);
 
+  //grabbing our rooms from the backend
+  /*
   useEffect(() => {
     fetch(backendURL("/api/database")).then(async (res) => {
       const data = await res.json();
       setRooms(validateType(RoomsDef, data));
     })
-  }, [])
-
+  }, []) */
 
   //ugly as heck but is a 3n solution to sorting this datastructure
   //so cope I guess, index 0 is room number, index 1 is the data, index 2 is the estimation of the room
