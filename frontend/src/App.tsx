@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { backendURL } from './utils';
-import { Floors, FloorsContext, FloorsDef, validateType } from './types';
+import { Building, BuildingDef, Floors, FloorsContext, FloorsDef, RoomsDef, validateType } from './types';
 import ListRooms from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
@@ -11,17 +11,6 @@ import legend from "./assets/legend.png"
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
 import { Menu, MenuButton } from './Menu';
 
-
-function ScrollableList() {
-
-  /*Scrollable list probably needs to have it's height capped */
-
-  return (
-    <div className="scrollable-list">
-      <ListRooms />
-    </div>
-  );
-}
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
 function FloorDropdown({ setCurrentFloor }: { setCurrentFloor: (floor: "3" | "4") => unknown }) {
@@ -42,28 +31,36 @@ const floorMapURLs = {
 } as const;
 
 export default function MyApp() {
-  const [floors, setFloors] = useState<Floors | null>(null);
-  const [currentFloor, setCurrentFloor] = useState<"3" | "4">("3");
+
 
   const [isActive, setIsActive] = useState(true);
   const [isLegendActive, setLegendIsActive] = useState(true);
 
   const toggleMap = () => {
-
     setIsActive(current => !current);
-
   }
 
   const toggleLegend = () => {
-
     setLegendIsActive(current => !current);
-
   }
+
+  const [floors, setFloors] = useState<Floors | null>(null);
+  const [currentFloor, setCurrentFloor] = useState<"3" | "4">("3");
 
   useEffect(() => {
     fetch(backendURL("/api/floors")).then(async (r) => {
       const data = await r.json();
       setFloors(validateType(FloorsDef, data));
+    })
+  }, []);
+
+
+  //framework for switching between buildings easily
+  const [building, setBuilding] = useState<Building | null>(null);
+  useEffect(() => {
+    fetch(backendURL("/api/folsomLibrary")).then(async (r) => {
+      const data = await r.json();
+      setBuilding(validateType(BuildingDef, data));
     })
   }, []);
 
@@ -121,8 +118,9 @@ export default function MyApp() {
               <h2>List of Rooms</h2>
               <FloorDropdown setCurrentFloor={setCurrentFloor} />
             </div>
-
-            <ScrollableList />
+            <div className="scrollable-list">
+              {building?.rooms && <ListRooms rooms={building.rooms} setRooms={(rooms) => setBuilding({ ...building, rooms })} />}
+            </div>
           </div>
           <div className='map-container' style={{ display: isActive ? 'flex' : 'none' }} /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',}} */>

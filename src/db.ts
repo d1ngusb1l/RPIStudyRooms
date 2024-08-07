@@ -1,6 +1,6 @@
-import { Floors, Rooms, RoomStatusEnum } from "./types.js";
+import { Building, Floor, Floors, Rooms, RoomStatusEnum } from "./types.js";
 
-export const initialRooms: Rooms = {
+export const folsomRooms: Rooms = {
   "323-A": {
     status: RoomStatusEnum.Empty,
     lastReported: 0,
@@ -167,60 +167,97 @@ export const initialRooms: Rooms = {
   },
 };
 
-export const floor3 = {
-  floorNum: 300,
+export const folsomFloor3: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
-  rooms: [
-    "332-A",
-    "332-B",
-    "332-C",
-    "332-D",
-    "332-E",
-    "337-A",
-    "337-B",
-    "337-C",
-    "337-D",
-    "337-D",
-    "342-B",
-    "342-C",
-    "352-A",
-    "352-B",
-    "352-C",
-    "352-D",
-    "352-E",
-  ],
 };
 
-export const floor4 = {
-  floorNum: 400,
+export const folsomFloor4: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
-  rooms: [
-    "423-A",
-    "423-B",
-    "423-C",
-    "423-D",
-    "423-E",
-    "424-A",
-    "424-B",
-    "433-A",
-    "435-D",
-    "437-A",
-    "437-B",
-    "437-C",
-    "442-A",
-    "442-B",
-    "442-C",
-    "442-D",
-    "442-E",
-    "453-A",
-    "453-B",
-    "453-C",
-    "453-D",
-    "453-E",
-  ],
 };
 
 export const floors: Floors = {
-  "3": floor3,
-  "4": floor4,
+  "3": folsomFloor3,
+  "4": folsomFloor4,
+};
+
+export const folsomLibrary: Building = {
+  "rooms" : folsomRooms,
+  "floors" : { "3": folsomFloor3, "4": folsomFloor4},
+};
+
+export const bartonRooms: Rooms = {
+  "1108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2004": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2006": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2008": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "2308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3004": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3006": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3008": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "3308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "4108": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+  "4308": {
+    status: RoomStatusEnum.Empty,
+    lastReported: 0,
+  },
+
+};
+
+export const bartonFloor1: Floor = {
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+};
+
+export const bartonFloor2: Floor = {
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+};
+
+export const bartonFloor3: Floor = {
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+};
+
+export const bartonFloor4: Floor = {
+  noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
+};
+
+export const barton: Building = {
+  "rooms" : bartonRooms,
+  "floors" : { "1" : bartonFloor1, "2" : bartonFloor2, "3": folsomFloor3, "4": folsomFloor4},
 };

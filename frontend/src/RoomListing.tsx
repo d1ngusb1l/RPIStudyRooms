@@ -1,9 +1,94 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Collapsible from "./Collapsible";
 import { Room, RoomContext, RoomDef, Rooms, RoomsDef, RoomStatusEnum, validateType } from "./types";
 import { backendURL } from "./utils";
-import { StatusCalculation, colorCalc, adjust, doorCalc } from "./StatusCalculation";
+import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
+
+function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
+  { currentStatus: string, displayStatus: string, setCurrentStatus: (status: string) => unknown }) {
+
+  //selecting the color
+  let color = "";
+  switch (displayStatus) {
+    case "Empty":
+      color = "#4CFF00";
+      break;
+    case "Full":
+      color = "#FF0000";
+      break;
+    case "In Use by Me":
+      color = "#FF0080";
+      break;
+    default:
+      color = "#FFFFFF";
+  }
+
+  return (
+    <div style={{ backgroundColor: color, height: 40 }}>
+
+      <label>
+        <input
+          type="radio"
+          checked={currentStatus == displayStatus}
+          onChange={() => { setCurrentStatus(displayStatus); }}
+        />
+        {displayStatus}
+      </label>
+    </div>
+  );
+}
+
+function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
+  { rNum: string, currentStatus: string, setCurrentStatus: (status: string) => unknown, duration: number }) {
+
+  const { rooms, update } = useContext(RoomContext);
+
+  switch (currentStatus) {
+    case "Empty":
+      return (
+        <button
+          onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
+            const data = await r.json();
+            const newRoom = validateType(RoomDef, data);
+            update({ ...rooms, [rNum]: newRoom });
+            setCurrentStatus("");
+          })}>
+          Submit
+        </button>
+      );
+
+    case "Full":
+      return (
+        <button
+          onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
+            const data = await r.json();
+            const newRoom = validateType(RoomDef, data);
+            update({ ...rooms, [rNum]: newRoom });
+            setCurrentStatus("");
+          })}>
+          Submit
+        </button>
+      );
+
+    case "In Use by Me":
+      return (<button
+        onClick={() => fetch(backendURL(`/api/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
+          const data = await r.json();
+          const newRoom = validateType(RoomDef, data);
+          update({ ...rooms, [rNum]: newRoom });
+          setCurrentStatus("");
+        })}>
+        Submit
+      </button>);
+
+    default:
+      //for when user has nothing selected
+      return (<div></div>);
+  }
+}
+
+/*
 function EmptyButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
 
@@ -19,7 +104,6 @@ function EmptyButton({ rNum }: { rNum: string }) {
     </button>
   );
 }
-
 
 function FullButton({ rNum }: { rNum: string }) {
   const { rooms, update } = useContext(RoomContext);
@@ -65,99 +149,118 @@ function PersonalUseButton({ rNum }: { rNum: string }) {
     </button>
   );
 }
+*/
 
 
-function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: string }) {
+function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: RoomProbability }) {
+
+  const [currentStatus, setCurrentStatus] = useState("");
+  const [duration, setDuration] = useState(1);
+
   return <Collapsible title={""}>
     <p>Reported as: {' ' + room.status + ' '}</p>
-    <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
-    <p>Our Estimation: <text style={{color: adjust(colorCalc(chance),-53), fontWeight: "bold"}} >{chance}</text></p>
-    <FullButton rNum={roomNumber} />
-    <EmptyButton rNum={roomNumber} />
-    <PersonalUseButton rNum={roomNumber} />
+    {room.lastReported > 0 && <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>}
+    {room.claimedUntil !== undefined && <p>Claimed until: {new Date(room.claimedUntil).toLocaleTimeString()}</p>}
+    <p>Our Estimation: <text style={{ color: adjust(colorCalc(chance), -53), fontWeight: "bold" }} >{chance}</text></p>
+
+    <StatusRadioInput currentStatus={currentStatus} displayStatus="Empty" setCurrentStatus={setCurrentStatus} />
+    <StatusRadioInput currentStatus={currentStatus} displayStatus="Full" setCurrentStatus={setCurrentStatus} />
+    <StatusRadioInput currentStatus={currentStatus} displayStatus="In Use by Me" setCurrentStatus={setCurrentStatus} />{currentStatus === "In Use by Me" && <label><input type="number" placeholder="Duration in minutes" min="1" max="120" value={duration} onChange={(e) => setDuration(Number(e.target.value))} /> Reservation Time (minutes)</label>}
+    {currentStatus && <SubmitStatusButton rNum={roomNumber} currentStatus={currentStatus} setCurrentStatus={setCurrentStatus} duration={duration} />}
   </Collapsible>
 }
 
-function FormatKey({roomNum, status}: {roomNum: string, status: string}) {
+function FormatKey({ roomNum, status }: { roomNum: string, status: string }) {
   const doorIcon = doorCalc(status);
 
-  return(
+  return (
     <div>
-        <div className="room-header">
-          <div id = "circle" style={{backgroundColor : colorCalc(status)}} ></div>  
-          <img src={doorIcon} className='doorIcon' />
-           <p style={{fontWeight: "bold"}}>{roomNum}</p>
-        </div>
+      <div className="room-header">
+        <div id="circle" style={{ backgroundColor: colorCalc(status) }} ></div>
+        <img src={doorIcon} className='doorIcon' />
+        <p style={{ fontWeight: "bold" }}>{roomNum}</p>
+      </div>
     </div>
   )
-  
+
 }
 
-//the big boy function that actually does the thing
-export default function ListRooms() {
-  //grabbing our room object from the back end
-  const [rooms, setRooms] = useState<Rooms | null>(null);
+//ugly as heck but is a 3n solution to sorting this datastructure
+//so cope I guess, index 0 is room number, index 1 is the data, index 2 is the estimation of the room
+export interface RoomEstimation {
+  roomNumber: string;
+  room: Room;
+  estimation: RoomProbability;
+}
 
+
+//the big boy function that actually does the thing
+export default function ListRooms({ rooms, setRooms }: { rooms: Rooms, setRooms: (rooms: Rooms) => unknown }) {
+
+  //grabbing our rooms from the backend
+  /*
   useEffect(() => {
     fetch(backendURL("/api/database")).then(async (res) => {
       const data = await res.json();
       setRooms(validateType(RoomsDef, data));
     })
-  }, [])
+  }, []) */
+  const listRooms = useMemo(() => {
 
+    const roomProbabilityItems: Record<RoomProbability, RoomEstimation[]> = {
+      "Certainly Empty": [],
+      "Likely Empty": [],
+      "Possibly Empty": [],
+      "Uncertain": [],
+      "Possibly Occupied": [],
+      "Likely Occupied": [],
+      "Certainly Occupied": [],
+      "Closed": [],
+      "Available": [],
+      "Reserved": [],
+    }
 
-  //ugly as heck but is a 3n solution to sorting this datastructure
-  //so cope I guess, index 0 is room number, index 1 is the data, index 2 is the estimation of the room
-  let certainlyOccupiedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let likelyOccupiedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let possiblyOccupiedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let uncertainRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let possiblyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let likelyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let certainlyEmptyRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
-  let closedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
+    //iterating through our dictionary object and placing each room in the right container
+    rooms ? Object.entries(rooms).forEach(room => {
+      const status = StatusCalculation(room[1]);
 
-  //iterating through our dictionary object and placing each room in the right container
-  rooms ? Object.entries(rooms).forEach(room => {
-    let status = StatusCalculation(room[1]);
+      //creating a slightly larger version of the room datastructure to store the status of the room
+      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status };
+      roomProbabilityItems[status].push(modifiedRoom);
 
-    //creating a slightly larger version of the room datastructure to store the status of the room
-    let modifiedRoom: [string, { status: RoomStatusEnum; lastReported: number; }, string]
-      = [room[0], { status: room[1].status, lastReported: room[1].lastReported }, status];
+    }) : 'error';
 
-    //checking the status and adding the room to the appropriate group
-    if (status == "Certainly Occupied") { certainlyOccupiedRooms.push(modifiedRoom); }
-    else if (status == "Likely Occupied") { likelyOccupiedRooms.push(modifiedRoom); }
-    else if (status == "Possibly Occupied") { possiblyOccupiedRooms.push(modifiedRoom); }
-    else if (status == "Possibly Empty") { possiblyEmptyRooms.push(modifiedRoom); }
-    else if (status == "Likely Empty") { likelyEmptyRooms.push(modifiedRoom); }
-    else if (status == "Certainly Empty") { certainlyEmptyRooms.push(modifiedRoom); }
-    else if (status == "Closed/Reserved") { closedRooms.push(modifiedRoom); }
-    else { uncertainRooms.push(modifiedRoom) }
-  }) : 'error';
+    //creating the array we will ultimately map our ui element onto
+    const sortedRooms: RoomEstimation[] = [];
 
-  //creating the array we will ultimately map our ui element onto
-  let sortedRooms: [string, { status: RoomStatusEnum; lastReported: number; }, string][] = [];
+    //adding our rooms in order to our mappable array
+    const probabilityOrder: RoomProbability[] = [
+      RoomProbability.Available,
+      RoomProbability.CertainlyEmpty,
+      RoomProbability.LikelyEmpty,
+      RoomProbability.PossiblyEmpty,
+      RoomProbability.Uncertain,
+      RoomProbability.PossiblyOccupied,
+      RoomProbability.LikelyOccupied,
+      RoomProbability.CertainlyOccupied,
+      RoomProbability.Reserved,
+      RoomProbability.Closed,
+    ];
 
-  //adding our rooms in order to our mappable array
-  certainlyEmptyRooms.forEach(room => { sortedRooms.push(room); });
-  likelyEmptyRooms.forEach(room => { sortedRooms.push(room); });
-  possiblyEmptyRooms.forEach(room => { sortedRooms.push(room); });
-  uncertainRooms.forEach(room => { sortedRooms.push(room); });
-  possiblyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
-  likelyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
-  certainlyOccupiedRooms.forEach(room => { sortedRooms.push(room); });
-  closedRooms.forEach(room => { sortedRooms.push(room); })
+    probabilityOrder.forEach(probability => {
+      sortedRooms.push(...roomProbabilityItems[probability]);
+    });
 
-  //mapping our array to the ui element
-  const listRooms = sortedRooms.map(([roomNumber, room, chance]) =>
-    <div className="room-box">
-      <li key={roomNumber} >
-        <FormatKey roomNum={roomNumber} status={chance}/>
-        <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
-      </li>
-    </div>
-  )
+    //mapping our array to the ui element
+    return sortedRooms.map(({ roomNumber, room, estimation: chance }) =>
+      <div className="room-box">
+        <li key={roomNumber} >
+          <FormatKey roomNum={roomNumber} status={chance} />
+          <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
+        </li>
+      </div>
+    )
+  }, [rooms])
 
   //returning our list of rooms
   return rooms !== null && <RoomContext.Provider value={{ rooms, update: setRooms }}><ul style={{ listStyle: 'none' }}>{listRooms}</ul></RoomContext.Provider>;

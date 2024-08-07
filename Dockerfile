@@ -25,7 +25,8 @@ COPY --from=build /app .
 COPY --from=prisma-gen /app/node_modules/@prisma/client /app/node_modules/@prisma/client
 COPY --from=prisma-gen /app/node_modules/.prisma/client /app/node_modules/.prisma/client
 
-ENV NODE_ENV=development
+ENV NODE_ENV=development 
+ENV TZ="America/New_York"
 CMD ["npm", "run", "start-server-dev"]
 
 FROM node:20.15-alpine as prod-build
@@ -66,4 +67,5 @@ COPY --from=prod-build /app/dist dist
 COPY --from=prod-frontend /app/frontend/dist frontend/dist
 
 ENV NODE_ENV=production
+ENV TZ="America/New_York"
 CMD ["node", "dist/app.js"]
