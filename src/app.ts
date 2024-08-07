@@ -41,18 +41,17 @@ if (process.env.NODE_ENV === "production") {
 
 const port = Number(process.env.PORT) || 5001;
 
-
 const Folsom_Library = {
   hours: {
-    monday : [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
-    tuesday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    wednesday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    thursday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    friday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 17)],
-    saturday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    sunday : [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-  }
-}
+    monday: [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
+    tuesday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+    wednesday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+    thursday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+    friday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 17)],
+    saturday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+    sunday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
+  },
+};
 
 let displayAsClosed = false;
 
@@ -63,58 +62,62 @@ function isClosed() {
   let openingTime;
   let closingTime;
   let pass = true;
-  
+
   switch (day) {
-      case 0:
-          openingTime = Folsom_Library.hours.sunday[0].getHours();
-          closingTime = Folsom_Library.hours.sunday[1].getHours();
-          break;
-      case 1:
-          openingTime = Folsom_Library.hours.monday[0].getHours();
-          closingTime = Folsom_Library.hours.monday[1].getHours();
-          break;
-      case 2:
-          openingTime = Folsom_Library.hours.tuesday[0].getHours();
-          closingTime = Folsom_Library.hours.tuesday[1].getHours();
-          break;
-      case 3:
-          openingTime = Folsom_Library.hours.wednesday[0].getHours();
-          closingTime = Folsom_Library.hours.wednesday[1].getHours();
-          break;
-      case 4:
-          openingTime = Folsom_Library.hours.thursday[0].getHours();
-          closingTime = Folsom_Library.hours.thursday[1].getHours();
-          break;
-      case 5:
-          openingTime = Folsom_Library.hours.friday[0].getHours();
-          closingTime = Folsom_Library.hours.friday[1].getHours();
-          break;
-      case 6:
-          openingTime = Folsom_Library.hours.sunday[0].getHours();
-          closingTime = Folsom_Library.hours.sunday[1].getHours();
-          break;
-      default:
-          openingTime = Folsom_Library.hours.sunday[0].getHours();
-          closingTime = Folsom_Library.hours.sunday[1].getHours();
-          pass = false;
-          break;
-          
+    case 0:
+      openingTime = Folsom_Library.hours.sunday[0].getHours();
+      closingTime = Folsom_Library.hours.sunday[1].getHours();
+      break;
+    case 1:
+      openingTime = Folsom_Library.hours.monday[0].getHours();
+      closingTime = Folsom_Library.hours.monday[1].getHours();
+      break;
+    case 2:
+      openingTime = Folsom_Library.hours.tuesday[0].getHours();
+      closingTime = Folsom_Library.hours.tuesday[1].getHours();
+      break;
+    case 3:
+      openingTime = Folsom_Library.hours.wednesday[0].getHours();
+      closingTime = Folsom_Library.hours.wednesday[1].getHours();
+      break;
+    case 4:
+      openingTime = Folsom_Library.hours.thursday[0].getHours();
+      closingTime = Folsom_Library.hours.thursday[1].getHours();
+      break;
+    case 5:
+      openingTime = Folsom_Library.hours.friday[0].getHours();
+      closingTime = Folsom_Library.hours.friday[1].getHours();
+      break;
+    case 6:
+      openingTime = Folsom_Library.hours.sunday[0].getHours();
+      closingTime = Folsom_Library.hours.sunday[1].getHours();
+      break;
+    default:
+      openingTime = Folsom_Library.hours.sunday[0].getHours();
+      closingTime = Folsom_Library.hours.sunday[1].getHours();
+      pass = false;
+      break;
   }
-  
-  if(((openingTime < currentTime && currentTime < closingTime) || (openingTime == currentTime && currentDate.getSeconds() > 0 && currentTime < closingTime)) && pass == true) {
-      return true;
+
+  if (
+    ((openingTime < currentTime && currentTime < closingTime) ||
+      (openingTime == currentTime &&
+        currentDate.getSeconds() > 0 &&
+        currentTime < closingTime)) &&
+    pass == true
+  ) {
+    return true;
   }
   return false;
 }
-
 
 function dbCleanup() {
   //getting rid of noise reports that are more
   //than an hour old
   let nrOld = floors["3"].noiseReports;
   let nrNew = [];
-  for(let i = 0; i < nrOld.length; i++ ) {
-    if(Date.now() - nrOld[i].timeReported < 3600000) {
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
@@ -122,23 +125,22 @@ function dbCleanup() {
 
   nrOld = floors["4"].noiseReports;
   nrNew = [];
-  for(let i = 0; i < nrOld.length; i++ ) {
-    if(Date.now() - nrOld[i].timeReported < 3600000) {
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
   floors["4"].noiseReports = nrNew;
 
   //setting rooms as closed when library is closed
-  if(isClosed()) {
-    for( const [roomNum, info] of Object.entries(initialRooms)) {
+  if (isClosed()) {
+    for (const [roomNum, info] of Object.entries(initialRooms)) {
       info.status = RoomStatusEnum.Closed;
       info.lastReported = Date.now();
     }
     displayAsClosed = true;
-  }
-  else if(displayAsClosed) {
-    for( const [roomNum, info] of Object.entries(initialRooms)) {
+  } else if (displayAsClosed) {
+    for (const [roomNum, info] of Object.entries(initialRooms)) {
       info.status = RoomStatusEnum.Empty;
       info.lastReported = Date.now();
     }
@@ -168,6 +170,7 @@ app.post(
     } else {
       initialRooms[req.params.roomNumber].status = RoomStatusEnum.Full;
       initialRooms[req.params.roomNumber].lastReported = Date.now();
+      initialRooms[req.params.roomNumber].claimedUntil = undefined;
       res.json(initialRooms[req.params.roomNumber]);
     }
   }
@@ -185,31 +188,21 @@ app.post(
     } else {
       initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
       initialRooms[req.params.roomNumber].lastReported = Date.now();
+      initialRooms[req.params.roomNumber].claimedUntil = undefined;
       res.json(initialRooms[req.params.roomNumber]);
     }
   }
 );
 
 app.post(
-  "/api/reportAsEmpty/:roomNumber",
+  "/api/reportAsPersonalUse/:roomNumber/:durationMins",
   (req, res: Response<Room | ErrorType>) => {
-    if (!initialRooms[req.params.roomNumber]) {
-      res.status(404).json({
-        status: 404,
-        message: "Room not found.",
+    if (isNaN(Number(req.params.durationMins))) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid duration.",
       });
-      return;
-    } else {
-      initialRooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      initialRooms[req.params.roomNumber].lastReported = Date.now();
-      res.json(initialRooms[req.params.roomNumber]);
     }
-  }
-);
-
-app.post(
-  "/api/reportAsPersonalUse/:roomNumber",
-  (req, res: Response<Room | ErrorType>) => {
     if (!initialRooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
@@ -219,6 +212,9 @@ app.post(
     } else {
       initialRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
       initialRooms[req.params.roomNumber].lastReported = Date.now();
+      initialRooms[req.params.roomNumber].claimedUntil =
+        initialRooms[req.params.roomNumber].lastReported +
+        Number(req.params.durationMins) * 60 * 1000;
       res.json(initialRooms[req.params.roomNumber]);
     }
   }

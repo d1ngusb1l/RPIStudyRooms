@@ -18,6 +18,7 @@ export enum RoomStatusEnum {
 export const RoomDef = Type.Object({
   status: Type.Enum(RoomStatusEnum),
   lastReported: Type.Number(),
+  claimedUntil: Type.Optional(Type.Number()),
 });
 export const RoomsDef = Type.Record(Type.String(), RoomDef);
 export type Room = Static<typeof RoomDef>;
