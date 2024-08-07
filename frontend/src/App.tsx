@@ -113,9 +113,9 @@ export default function MyApp() {
               <h2>List of Rooms</h2>
               <FloorDropdown setCurrentFloor={setCurrentFloor} />
             </div>
-              <div className="scrollable-list">
-                {building?.rooms && <ListRooms rooms={building.rooms} />}
-              </div>
+            <div className="scrollable-list">
+              {building?.rooms && <ListRooms rooms={building.rooms} setRooms={(rooms) => setBuilding({ ...building, rooms })} />}
+            </div>
           </div>
           <div className='map-container' style={{ display: isActive ? 'flex' : 'none' }} /*style={{display : isActive ? 'flex' : 'none',
               alignItems: isActive ? 'center' : '',}} */>

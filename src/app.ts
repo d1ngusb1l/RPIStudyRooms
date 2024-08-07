@@ -99,6 +99,25 @@ function isClosed() {
       pass = false;
       break;
   }
+  /*
+  console.log({
+    openingTime,
+    currentTime,
+    closingTime,
+    pass,
+    conds: [
+      openingTime < currentTime,
+      currentTime < closingTime,
+      openingTime < currentTime && currentTime < closingTime,
+      openingTime == currentTime,
+      currentDate.getSeconds() > 0,
+      currentTime < closingTime,
+      openingTime == currentTime &&
+        currentDate.getSeconds() > 0 &&
+        currentTime < closingTime,
+      pass,
+    ],
+  });*/
 
   if (
     ((openingTime < currentTime && currentTime < closingTime) ||
@@ -107,9 +126,9 @@ function isClosed() {
         currentTime < closingTime)) &&
     pass == true
   ) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 }
 
 function dbCleanup() {
@@ -133,17 +152,21 @@ function dbCleanup() {
   }
   floors["4"].noiseReports = nrNew;
 
+  // console.log("Closed: " + isClosed());
+
   //setting rooms as closed when library is closed
   if (isClosed()) {
     for (const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Closed;
       info.lastReported = Date.now();
+      info.claimedUntil = undefined;
     }
     displayAsClosed = true;
   } else if (displayAsClosed) {
     for (const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Empty;
       info.lastReported = Date.now();
+      info.claimedUntil = undefined;
     }
   }
 
@@ -151,6 +174,7 @@ function dbCleanup() {
 }
 
 app.listen(port, () => {
+  dbCleanup();
   setInterval(dbCleanup, 60000);
   console.log("Listening on *:" + port);
 });
@@ -219,7 +243,7 @@ app.post(
       folsomRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
       folsomRooms[req.params.roomNumber].lastReported = Date.now();
       folsomRooms[req.params.roomNumber].claimedUntil =
-      folsomRooms[req.params.roomNumber].lastReported +
+        folsomRooms[req.params.roomNumber].lastReported +
         Number(req.params.durationMins) * 60 * 1000;
       res.json(folsomRooms[req.params.roomNumber]);
     }

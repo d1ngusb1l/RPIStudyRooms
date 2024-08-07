@@ -159,7 +159,7 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
 
   return <Collapsible title={""}>
     <p>Reported as: {' ' + room.status + ' '}</p>
-    <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>
+    {room.lastReported > 0 && <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>}
     {room.claimedUntil !== undefined && <p>Claimed until: {new Date(room.claimedUntil).toLocaleTimeString()}</p>}
     <p>Our Estimation: <text style={{ color: adjust(colorCalc(chance), -53), fontWeight: "bold" }} >{chance}</text></p>
 
@@ -195,9 +195,7 @@ export interface RoomEstimation {
 
 
 //the big boy function that actually does the thing
-export default function ListRooms({rooms}: {rooms : Rooms}) {
-  //react hook for updating rooms
-  const [, setRooms] = useState<Rooms | null>(null);
+export default function ListRooms({ rooms, setRooms }: { rooms: Rooms, setRooms: (rooms: Rooms) => unknown }) {
 
   //grabbing our rooms from the backend
   /*
