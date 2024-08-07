@@ -32,16 +32,14 @@ function NoiseLevelRadioInput ({noiseNumber, selectedNoiseLevel, setSelectedNois
     }
     
     return (
-        <div>
-            <label>
-                <input
-                    type="radio"
-                    checked={selectedNoiseLevel == noiseNumber}
-                    onChange={() => {setSelectedNoiseLevel(noiseNumber); console.log(noiseNumber)}}
-                />
-            {noiseText}
-            </label>
-        </div>
+        <label>
+            <input
+                type="radio"
+                checked={selectedNoiseLevel == noiseNumber}
+                onChange={() => {setSelectedNoiseLevel(noiseNumber);}}
+            />
+        {noiseText}
+        </label>
     );
 }
 
