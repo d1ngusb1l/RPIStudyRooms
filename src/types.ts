@@ -60,6 +60,7 @@ export const RoomDef = Type.Object({
   claimedUntil: Type.Optional(Type.Number()),
 });
 export type Room = Static<typeof RoomDef>;
+export const RoomsDef = Type.Record(Type.String(), RoomDef);
 export type Rooms = Record<string, Room>;
 
 export const NoiseReportDef = Type.Object({
@@ -69,19 +70,18 @@ export const NoiseReportDef = Type.Object({
 export type NoiseReport = Static<typeof NoiseReportDef>;
 
 export const FloorDef = Type.Object({
-  floorNum: Type.Number(),
   noiseReports: Type.Array(NoiseReportDef),
-  rooms: Type.Array(Type.String()),
-});
-export type Floor = Static<typeof FloorDef>;
-export type Floors = Record<string, Floor>;
+})
+export type Floor = Static<typeof FloorDef>
+export const FloorsDef = Type.Record(Type.String(), FloorDef);
+export type Floors = Record<string, Floor>
 
 export const BuildingDef = Type.Object({
-  name: Type.String(),
-  floors: Type.Array(Type.String()),
-  rooms: Type.Array(Type.String()),
-});
-export type Building = Static<typeof BuildingDef>;
+  rooms: RoomsDef,
+  floors: Type.Record(Type.String(), FloorDef)
+})
+export type Building = Static<typeof BuildingDef>
+
 
 export function validateType<T extends TSchema>(
   type: T,
