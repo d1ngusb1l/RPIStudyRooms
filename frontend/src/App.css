@@ -271,15 +271,19 @@ body {
 
 @media (max-width: 1000px) {
   .scrollable-list {
-    max-width: 40vh; /* Relative to viewport height */
+    max-width: 50vh; /* Relative to viewport height */
   }
 
   .map {
-    max-width: 40vw; /* Relative to viewport width */
-    max-height: 35vh; /* Relative to viewport height */
+    max-width:40vw; /* Relative to viewport width */
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
   }
 
-  .legend{
-    max-width: 70%; /* Relative to viewport width */
+  /* Holds the map element */
+  .map-container {
+    padding-top: 10rem;
   }
 }
