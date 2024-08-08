@@ -222,3 +222,18 @@ body {
   align-content: center;
   gap: 5px;
 }
+
+@media (max-width: 1000px) {
+  .scrollable-list {
+    max-width: 40vh; /* Relative to viewport height */
+  }
+
+  .map {
+    max-width: 40vw; /* Relative to viewport width */
+    max-height: 35vh; /* Relative to viewport height */
+  }
+
+  .legend{
+    max-width: 70%; /* Relative to viewport width */
+  }
+}

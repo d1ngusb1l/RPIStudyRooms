@@ -86,7 +86,15 @@ export default function MyApp() {
     fetch(backendURL("/api/buildings")).then(async (r) => {
       const data = await r.json();
       setBuildings(validateType(BuildingsDef, data));
-    })
+    });
+
+    const interval = setInterval(() => {
+      fetch(backendURL("/api/buildings")).then(async (r) => {
+        const data = await r.json();
+        setBuildings(validateType(BuildingsDef, data));
+      })
+    }, 10 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   //potential replacement for backend call once I can get it working ;w;
