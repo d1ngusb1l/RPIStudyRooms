@@ -175,11 +175,13 @@ function dbCleanup() {
   console.log("cleanup performed sucessfully!");
 }
 
-app.listen(port, () => {
-  dbCleanup();
-  setInterval(dbCleanup, 60000);
-  console.log("Listening on *:" + port);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    dbCleanup();
+    setInterval(dbCleanup, 60000);
+    console.log("Listening on *:" + port);
+  });
+}
 
 app.get("/api/folsomLibrary", (req, res: Response<Building>, next) => {
   res.json(folsomLibrary);
@@ -282,3 +284,5 @@ app.post(
     res.json(newNoiseReport);
   }
 );
+
+export default app;

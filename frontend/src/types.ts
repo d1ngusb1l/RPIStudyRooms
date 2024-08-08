@@ -16,26 +16,26 @@ export const RoomDef = Type.Object({
 });
 export type Room = Static<typeof RoomDef>;
 export const RoomsDef = Type.Record(Type.String(), RoomDef);
-export type Rooms = Record<string, Room>
+export type Rooms = Record<string, Room>;
 
 export const NoiseReportDef = Type.Object({
   timeReported: Type.Number(),
   noiseLevel: Type.Number(),
-})
-export type NoiseReport = Static<typeof NoiseReportDef>
+});
+export type NoiseReport = Static<typeof NoiseReportDef>;
 
 export const FloorDef = Type.Object({
   noiseReports: Type.Array(NoiseReportDef),
-})
-export type Floor = Static<typeof FloorDef>
+});
+export type Floor = Static<typeof FloorDef>;
 export const FloorsDef = Type.Record(Type.String(), FloorDef);
-export type Floors = Record<string, Floor>
+export type Floors = Record<string, Floor>;
 
 export const BuildingDef = Type.Object({
   rooms: RoomsDef,
-  floors: Type.Record(Type.String(), FloorDef)
-})
-export type Building = Static<typeof BuildingDef>
+  floors: Type.Record(Type.String(), FloorDef),
+});
+export type Building = Static<typeof BuildingDef>;
 export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
 export type Buildings = Record<string, Building>
 

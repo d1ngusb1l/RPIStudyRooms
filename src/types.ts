@@ -8,14 +8,14 @@ import { Request, Response } from "express";
 
 // type ValueError = Omit<OriginalValueError, "schema">;
 
-const ValueErrorDef = Type.Object({
+export const ValueErrorDef = Type.Object({
   type: Type.Enum(ValueErrorType),
   path: Type.String(),
   value: Type.Unknown(),
   message: Type.String(),
 });
 
-const ErrorTypeDef = Type.Union([
+export const ErrorTypeDef = Type.Union([
   Type.Object({
     status: Type.Literal(400),
     message: Type.Literal("Invalid request body."),
