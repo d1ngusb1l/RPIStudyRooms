@@ -1,23 +1,23 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Floor, FloorsContext, NoiseReportDef, validateType } from "./types";
+import { BuildingContext, Floor, NoiseReportDef, validateType } from "./types";
 import { backendURL } from "./utils";
 
 
 
 //radio button alternative to 
 //regular buttons from before
-function NoiseLevelRadioInput ({noiseNumber, selectedNoiseLevel, setSelectedNoiseLevel} : 
-    {noiseNumber : number, selectedNoiseLevel : number, setSelectedNoiseLevel: (noiseLevel: number) => unknown}) {
+function NoiseLevelRadioInput({ noiseNumber, selectedNoiseLevel, setSelectedNoiseLevel }:
+    { noiseNumber: number, selectedNoiseLevel: number, setSelectedNoiseLevel: (noiseLevel: number) => unknown }) {
 
     let noiseText = "";
 
-    switch(noiseNumber) {
+    switch (noiseNumber) {
         case 1:
-          noiseText = "Very Quiet";
-          break;
+            noiseText = "Very Quiet";
+            break;
         case 2:
-          noiseText = "Quiet";
-          break;
+            noiseText = "Quiet";
+            break;
         case 3:
             noiseText = "Moderate";
             break;
@@ -30,22 +30,23 @@ function NoiseLevelRadioInput ({noiseNumber, selectedNoiseLevel, setSelectedNois
         default:
             noiseText = "error"
     }
-    
+
     return (
         <label>
             <input
                 type="radio"
                 checked={selectedNoiseLevel == noiseNumber}
-                onChange={() => {setSelectedNoiseLevel(noiseNumber);}}
+                onChange={() => { setSelectedNoiseLevel(noiseNumber); }}
             />
-        {noiseText}
+            {noiseText}
         </label>
     );
 }
 
 //button for submitting the currently selected noise
-function SubmitButton({ noiseNumber, currentFloor, setLastReported }: { noiseNumber: number, currentFloor: string, setLastReported: (time: number) => unknown }) {
-    const { floors, updateFloor } = useContext(FloorsContext);
+function SubmitButton({ noiseNumber, setLastReported }: { noiseNumber: number, setLastReported: (time: number) => unknown }) {
+    const { building, updateFloor, currentFloorKey: currentFloor } = useContext(BuildingContext);
+    const floors = building.floors;
     return (
         <button onClick={() => fetch(backendURL(`/api/addNoiseReport/${currentFloor}/${noiseNumber}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
@@ -61,7 +62,9 @@ function SubmitButton({ noiseNumber, currentFloor, setLastReported }: { noiseNum
 
 
 //component which says current noise level of floor
-function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
+function CalculateCurrentNoiseLevel() {
+    const { currentFloorKey, building } = useContext(BuildingContext);
+    const cFloor = building.floors[currentFloorKey];
     let noiseVal = 0;
     let dummyDataPresent = false;
     for (const n of cFloor.noiseReports) {
@@ -69,7 +72,7 @@ function CalculateCurrentNoiseLevel({ cFloor }: { cFloor: Floor }) {
         noiseVal += n.noiseLevel;
     }
     if (dummyDataPresent && cFloor.noiseReports.length > 1) { noiseVal /= (cFloor.noiseReports.length - 1) }
-    else if(cFloor.noiseReports.length == 0) {noiseVal = 0;}
+    else if (cFloor.noiseReports.length == 0) { noiseVal = 0; }
     else { noiseVal /= cFloor.noiseReports.length; }
 
     let noiseLevel = "";
@@ -91,8 +94,7 @@ const timeBetweenNoiseReports = 1000 * 60 * 10; // 10 minutes
 
 
 //the main react component from this function
-export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
-    const { floors } = useContext(FloorsContext);
+export function NoiseLevelReporter() {
 
     //react hooks for keeping track of when the last report was made
     const [lastReported, setLastReported] = useState(0);
@@ -136,7 +138,7 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
         }
     }, [reportedRecently, waitUntil, current]);
 
-    
+
     //react hook for keeping track of the currently reported noise level
     const [selectedNoiseLevel, setSelectedNoiseLevel] = useState(0);
 
@@ -147,17 +149,17 @@ export function NoiseLevelReporter({ currentFloor }: { currentFloor: string }) {
                 <p> You have reported too recently, please wait until {waitUntil.toLocaleTimeString()} to report again. </p>
             ) : <><div><p style={{ margin: '1px auto' }}>Report Noise Level of Floor</p></div>
                 <div>
-                        <NoiseLevelRadioInput noiseNumber={1} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
-                        <NoiseLevelRadioInput noiseNumber={2} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
-                        <NoiseLevelRadioInput noiseNumber={3} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
-                        <NoiseLevelRadioInput noiseNumber={4} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
-                        <NoiseLevelRadioInput noiseNumber={5} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel}/>
-                        <SubmitButton noiseNumber={selectedNoiseLevel} currentFloor={currentFloor} setLastReported={setLastReported} />
+                    <NoiseLevelRadioInput noiseNumber={1} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
+                    <NoiseLevelRadioInput noiseNumber={2} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
+                    <NoiseLevelRadioInput noiseNumber={3} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
+                    <NoiseLevelRadioInput noiseNumber={4} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
+                    <NoiseLevelRadioInput noiseNumber={5} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
+                    <SubmitButton noiseNumber={selectedNoiseLevel} setLastReported={setLastReported} />
                 </div>
             </>}
 
             <div>
-                <CalculateCurrentNoiseLevel cFloor={floors[currentFloor]} />
+                <CalculateCurrentNoiseLevel />
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import { Building, Room, RoomDef, RoomStatusEnum } from "./types";
+import { Room, RoomStatusEnum } from "./types";
 import roomOpen from "./assets/roomOpen.png";
 import roomLEmpty from "./assets/roomLEmpty.png";
 import roomPEmpty from "./assets/roomPEmpty.png";
@@ -134,7 +134,7 @@ export function StatusCalculation(room: Room): RoomProbability {
   }
 }
 
-export function colorCalc(status: String) {
+export function colorCalc(status: string) {
   switch (status) {
     case "Certainly Empty":
       return "#4CFF00";
@@ -161,7 +161,7 @@ export function colorCalc(status: String) {
   }
 }
 
-export function doorCalc(status: String) {
+export function doorCalc(status: string) {
   switch (status) {
     case "Certainly Empty":
       return roomOpen;
