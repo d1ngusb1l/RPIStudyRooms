@@ -45,14 +45,13 @@ function NoiseLevelRadioInput({ noiseNumber, selectedNoiseLevel, setSelectedNois
 
 //button for submitting the currently selected noise
 function SubmitButton({ noiseNumber, setLastReported }: { noiseNumber: number, setLastReported: (time: number) => unknown }) {
-    const { building, updateFloor, currentFloorKey: currentFloor } = useContext(BuildingContext);
-    const floors = building.floors;
+    const { updateFloor, currentFloorKey, currentFloor, buildingKey } = useContext(BuildingContext);
     return (
-        <button onClick={() => fetch(backendURL(`/api/addNoiseReport/${currentFloor}/${noiseNumber}`), { method: "POST" }).then(async (r) => {
+        <button onClick={() => fetch(backendURL(`/api/${buildingKey}/addNoiseReport/${currentFloorKey}/${noiseNumber}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
             const newNoiseReport = validateType(NoiseReportDef, data);
-            const newFloor: Floor = { ...floors[currentFloor], noiseReports: [...floors[currentFloor].noiseReports, newNoiseReport] };
-            updateFloor(currentFloor, newFloor);
+            const newFloor: Floor = { ...currentFloor, noiseReports: [...currentFloor.noiseReports, newNoiseReport] };
+            updateFloor(currentFloorKey, newFloor);
             setLastReported(Date.now());
         })}>
             Submit

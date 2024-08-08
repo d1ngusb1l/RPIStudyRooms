@@ -35,7 +35,7 @@ test("GET /api/folsomLibrary gives us building", async () => {
 
 test("Repporting room as empty results in empty room", async () => {
   const beginningTimestamp = Date.now();
-  const val = await request(app).post("/api/reportAsEmpty/323-A");
+  const val = await request(app).post("/api/folsom/reportAsEmpty/323-A");
   const floor = goodResponse(val, RoomDef);
   expect(floor.status).to.equal(RoomStatusEnum.Empty);
   expect(floor.lastReported).to.be.a("number");
@@ -45,7 +45,7 @@ test("Repporting room as empty results in empty room", async () => {
 
 test("Repporting room as full results in full room", async () => {
   const beginningTimestamp = Date.now();
-  const val = await request(app).post("/api/reportAsFull/323-A");
+  const val = await request(app).post("/api/folsom/reportAsFull/323-A");
   const floor = goodResponse(val, RoomDef);
   expect(floor.status).to.equal(RoomStatusEnum.Full);
   expect(floor.lastReported).to.be.a("number");
@@ -55,7 +55,7 @@ test("Repporting room as full results in full room", async () => {
 
 test("Reporting room as personal use for 1 minute results in personal use room", async () => {
   const beginningTimestamp = Date.now();
-  const val = await request(app).post("/api/reportAsPersonalUse/323-A/1");
+  const val = await request(app).post("/api/folsom/reportAsPersonalUse/323-A/1");
   const floor = goodResponse(val, RoomDef);
   expect(floor.status).to.equal(RoomStatusEnum.PersonalUse);
   expect(floor.lastReported).to.be.a("number");

@@ -41,13 +41,13 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
 function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   { rNum: string, currentStatus: string, setCurrentStatus: (status: string) => unknown, duration: number }) {
 
-  const { updateRoom } = useContext(BuildingContext);
+  const { updateRoom, buildingKey } = useContext(BuildingContext);
 
   switch (currentStatus) {
     case "Empty":
       return (
         <button
-          onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
+          onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsEmpty/${rNum}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
             updateRoom(rNum, newRoom);
@@ -60,7 +60,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
     case "Full":
       return (
         <button
-          onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
+          onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsFull/${rNum}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
             updateRoom(rNum, newRoom);
@@ -72,7 +72,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 
     case "In Use by Me":
       return (<button
-        onClick={() => fetch(backendURL(`/api/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
+        onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
           const data = await r.json();
           const newRoom = validateType(RoomDef, data);
           updateRoom(rNum, newRoom);
