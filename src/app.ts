@@ -194,17 +194,18 @@ app.get("/api/buildings", (req, res: Response<Buildings>, next) => {
 app.post(
   "/api/:building/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.Full;
-      allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
-      allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil = undefined;
-      res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
+      room.status = RoomStatusEnum.Full;
+      room.lastReported = Date.now();
+      room.claimedUntil = undefined;
+      res.json(room);
     }
   }
 );
@@ -212,7 +213,8 @@ app.post(
 app.post(
   "/api/:building/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
@@ -220,10 +222,10 @@ app.post(
       return;
     } else {
 
-        allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-        allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
-        allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil = undefined;
-        res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
+        room.status = RoomStatusEnum.Empty;
+        room.lastReported = Date.now();
+        room.claimedUntil = undefined;
+        res.json(room);
     }
   }
 );
@@ -231,25 +233,26 @@ app.post(
 app.post(
   "/api/:building/reportAsPersonalUse/:roomNumber/:durationMins",
   (req, res: Response<Room | ErrorType>) => {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
     if (isNaN(Number(req.params.durationMins))) {
       return res.status(400).json({
         status: 400,
         message: "Invalid duration.",
       });
     }
-    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
-      allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
-      allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil =
-        folsomRooms[req.params.roomNumber].lastReported +
+      room.status = RoomStatusEnum.PersonalUse;
+      room.lastReported = Date.now();
+      room.claimedUntil =
+      room.lastReported +
         Number(req.params.durationMins) * 60 * 1000;
-      res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
+      res.json(room);
     }
   }
 );
