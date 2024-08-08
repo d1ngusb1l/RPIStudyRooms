@@ -17,6 +17,8 @@ import { Menu, MenuButton } from './Menu';
 
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
+
+/* Floor dropdown menu that changes floor map displayed */
 function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : string,  setCurrentFloor: (floor: "3" | "4") => unknown }) {
 
   if(currentBuilding == "folsom") {
@@ -53,7 +55,7 @@ const floorMapURLs = {
   }
 } as const;
 
-
+/* Building dropdown menu that changes building map displayed */
 function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (building: "folsom" | "barton") => unknown }) {
 
   return (
@@ -64,6 +66,7 @@ function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (buildin
   )
 }
 
+/* Main method app code*/
 export default function MyApp() {
 
   //functions for changing whether the map and legend are displayed
@@ -145,6 +148,7 @@ export default function MyApp() {
     }
   }, [buildings, currentBuilding, currentFloor]);
 
+  /* UI formatting*/
   return (
     <div>
       <header className="title">

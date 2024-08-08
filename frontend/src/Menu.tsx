@@ -2,6 +2,9 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useStat
 
 const MenuContext = createContext<{ setClosed: () => void }>({ setClosed: () => { } });
 
+// This is important. Did you know? Without this, nothing is real.
+// Tentative analysis, maybe handles behaviours of interactive elements.
+
 export function Menu(props: PropsWithChildren<{ outerLabel: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
     const setClosed = useCallback(() => setOpen(false), []);

@@ -7,6 +7,7 @@ import roomPOccupied from "./assets/roomPOccupied.png";
 import roomLOccupied from "./assets/roomLOccupied.png";
 import roomClosed from "./assets/roomClosed.png";
 
+// Closing and opening time frontend information for Folsom Library
 const Folsom_Library = {
   hours: {
     monday: [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
@@ -19,6 +20,7 @@ const Folsom_Library = {
   },
 };
 
+// Determines whether building is currently closed
 export function isClosed() {
   const currentDate = new Date();
   const currentTime = currentDate.getHours();
@@ -88,6 +90,7 @@ export enum RoomProbability {
   Available = "Available",
 }
 
+// Determines the probablity of a room being open or occupied.
 export function StatusCalculation(room: Room): RoomProbability {
   const reportTime = new Date(room.lastReported);
   const currentTime = new Date();
@@ -134,6 +137,7 @@ export function StatusCalculation(room: Room): RoomProbability {
   }
 }
 
+// Takes a probability and returns a color to match it
 export function colorCalc(status: string) {
   switch (status) {
     case "Certainly Empty":
@@ -161,6 +165,7 @@ export function colorCalc(status: string) {
   }
 }
 
+// Takes a probability and returns a door symbol to match it
 export function doorCalc(status: string) {
   switch (status) {
     case "Certainly Empty":
@@ -182,6 +187,7 @@ export function doorCalc(status: string) {
   }
 }
 
+// Makes a color to be darker for text to be more readable on top of it
 export function adjust(color: string, amount: number) {
   return (
     "#" +

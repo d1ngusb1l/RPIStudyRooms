@@ -43,6 +43,7 @@ if (process.env.NODE_ENV === "production") {
 
 const port = Number(process.env.PORT) || 5001;
 
+// Closing and opening time backend information for Folsom Library
 const Folsom_Library = {
   hours: {
     monday: [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
@@ -57,6 +58,7 @@ const Folsom_Library = {
 
 let displayAsClosed = false;
 
+// Determines whether building is currently closed
 function isClosed() {
   let currentDate = new Date();
   let currentTime = currentDate.getHours();

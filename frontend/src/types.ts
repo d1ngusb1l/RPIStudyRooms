@@ -9,6 +9,11 @@ export enum RoomStatusEnum {
   Closed = "closed",
 }
 
+/* 
+  This file holds type definitins for rooms, noise reports, floors, and buildings.
+  It also contains type verifiers.
+*/
+
 export const RoomDef = Type.Object({
   status: Type.Enum(RoomStatusEnum),
   lastReported: Type.Number(),

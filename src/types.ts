@@ -84,7 +84,7 @@ export type Building = Static<typeof BuildingDef>
 export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
 export type Buildings = Record<string, Building>
 
-
+// Makes sure that input passed through is valid for current function
 export function validateType<T extends TSchema>(
   type: T,
   data: unknown

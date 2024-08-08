@@ -6,6 +6,7 @@ import { backendURL } from "./utils";
 
 //radio button alternative to 
 //regular buttons from before
+/* Circle select buttons for different noice levels */
 function NoiseLevelRadioInput({ noiseNumber, selectedNoiseLevel, setSelectedNoiseLevel }:
     { noiseNumber: number, selectedNoiseLevel: number, setSelectedNoiseLevel: (noiseLevel: number) => unknown }) {
 

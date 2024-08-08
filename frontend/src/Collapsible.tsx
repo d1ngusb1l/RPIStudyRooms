@@ -6,7 +6,7 @@ interface IProps {
   open?: boolean;
   title: string;
 }
-
+/* Data structure for collapsible button. Used in room list. Clicking on it will display the report buttons. */
 const Collapsible: React.FC<React.PropsWithChildren<IProps>> = ({ open, children, title }) => {
   const [isOpen, setIsOpen] = useState(open);
 

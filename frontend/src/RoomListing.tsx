@@ -4,7 +4,7 @@ import { BuildingContext, Room, RoomDef, validateType } from "./types";
 import { backendURL } from "./utils";
 import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
-
+/* Circle select buttons for different report buttons */
 function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
   { currentStatus: string, displayStatus: string, setCurrentStatus: (status: string) => unknown }) {
 
@@ -38,6 +38,7 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
   );
 }
 
+/* Button for submitting the currently selected noise */
 function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   { rNum: string, currentStatus: string, setCurrentStatus: (status: string) => unknown, duration: number }) {
 
@@ -87,6 +88,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   }
 }
 
+// Finds the correct room information to display for list
 function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: RoomProbability }) {
 
   const [currentStatus, setCurrentStatus] = useState("");
@@ -105,6 +107,7 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
   </Collapsible>
 }
 
+// Find the correct colors and symbols to display for list
 function FormatKey({ roomNum, status }: { roomNum: string, status: string }) {
   const doorIcon = doorCalc(status);
 
@@ -129,7 +132,7 @@ export interface RoomEstimation {
 }
 
 
-//the big boy function that actually does the thing
+//the big boy function that actually lists out the rooms
 export default function ListRooms() {
   const { rooms } = useContext(BuildingContext);
 
