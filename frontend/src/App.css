@@ -109,8 +109,16 @@ body {
   /* flex-direction: column; */
   align-self: center;
 
-  justify-content: flex-end;
   gap: 0.25rem; /* Adjusted to rem for consistency */
+}
+
+/* Contains the dropdown containers for selecting different floors and different buildings */
+.dropdown-container {
+  display: flex;
+  align-self: center;
+
+
+  gap: 0.25rem;
 }
 
 .list-header {
@@ -121,7 +129,9 @@ body {
   align-content: center;
   justify-content: space-between;
   gap: 1rem; /* Adjusted to rem for consistency */
+  position: relative;
 }
+
 
 /* Defines the border to hold the dropdown selections for floor select */
 .dropdown-options {
