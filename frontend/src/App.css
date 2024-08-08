@@ -7,6 +7,7 @@
 }
 
 body {
+  
   margin: 0;
   padding: 0;
   /* overflow: hidden; *//* Prevents scrolling of the entire body */
@@ -27,7 +28,16 @@ body {
   border-radius: 0.5rem; /* Adjusted to rem for scalability */
   box-sizing: border-box;
   
-  justify-content: space-between;
+  position: fixed; /* Fixes the header to the top */
+  top: 0px; /* Keeps it at the top of the viewport */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  gap: 1rem;
+  justify-content: space-around;
+
+  height: 5rem;
 }
 
 .feedbacklink {
@@ -62,6 +72,8 @@ body {
   padding: 0.5rem;
   box-sizing: border-box;
   min-width: 40%;
+
+  margin-top: 6rem;
 }
 
 /* Holds the row of buttons and text containers above the rooms list */
@@ -102,6 +114,8 @@ body {
 
 /* Holds the map element */
 .map-container {
+  padding-top: 1rem;
+
   display: flex;
   align-items: center;
   align-content: center;
