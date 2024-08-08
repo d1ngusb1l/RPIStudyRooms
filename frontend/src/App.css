@@ -26,11 +26,13 @@ body {
   border: 0.156rem solid rgb(109, 109, 109); /* Adjusted to rem for scalability */
   border-radius: 0.5rem; /* Adjusted to rem for scalability */
   box-sizing: border-box;
+  
+  justify-content: space-between;
 }
 
 .feedbacklink {
-  flex: 1;
-  text-align: right;
+  /* flex: 1; */
+  /* text-align: right; */
   padding: 0.5rem;
 }
 
@@ -104,8 +106,10 @@ body {
 /* Contains the elements for the "display map" button and the "floor select" dropdown menu */
 .floorbutton-and-legend-display {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-self: center;
+
+  justify-content: flex-end;
   gap: 0.25rem; /* Adjusted to rem for consistency */
 }
 

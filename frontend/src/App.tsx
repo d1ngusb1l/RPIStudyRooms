@@ -34,7 +34,7 @@ export default function MyApp() {
 
 
   const [isActive, setIsActive] = useState(true);
-  const [isLegendActive, setLegendIsActive] = useState(true);
+  const [isLegendActive, setLegendIsActive] = useState(false);
 
   const toggleMap = () => {
     setIsActive(current => !current);
@@ -87,8 +87,6 @@ export default function MyApp() {
                 <button onClick={toggleMap}>Display Map</button>
                 <button onClick={toggleLegend}>Display Legend</button>
           </div>
-
-
           
           <div className="feedbacklink">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link">
