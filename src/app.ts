@@ -17,7 +17,7 @@ import {
   Building,
   Buildings,
 } from "./types.js";
-import { allBuildings, floors, folsomLibrary, folsomRooms } from "./db.js";
+import { allBuildings, bartonHall, floors, folsomLibrary, folsomRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -190,43 +190,44 @@ app.get("/api/buildings", (req, res: Response<Buildings>, next) => {
 });
 
 app.post(
-  "/api/reportAsFull/:roomNumber",
+  "/api/:building/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomLibrary.rooms[req.params.roomNumber]) {
+    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Full;
-      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
-      folsomLibrary.rooms[req.params.roomNumber].claimedUntil = undefined;
-      res.json(folsomLibrary.rooms[req.params.roomNumber]);
+      allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.Full;
+      allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
+      allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil = undefined;
+      res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
     }
   }
 );
 
 app.post(
-  "/api/reportAsEmpty/:roomNumber",
+  "/api/:building/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomLibrary.rooms[req.params.roomNumber]) {
+    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
-      folsomLibrary.rooms[req.params.roomNumber].claimedUntil = undefined;
-      res.json(folsomLibrary.rooms[req.params.roomNumber]);
+
+        allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
+        allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
+        allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil = undefined;
+        res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
     }
   }
 );
 
 app.post(
-  "/api/reportAsPersonalUse/:roomNumber/:durationMins",
+  "/api/:building/reportAsPersonalUse/:roomNumber/:durationMins",
   (req, res: Response<Room | ErrorType>) => {
     if (isNaN(Number(req.params.durationMins))) {
       return res.status(400).json({
@@ -234,19 +235,19 @@ app.post(
         message: "Invalid duration.",
       });
     }
-    if (!folsomRooms[req.params.roomNumber]) {
+    if (!allBuildings[req.params.building].rooms[req.params.roomNumber]) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
-      folsomRooms[req.params.roomNumber].lastReported = Date.now();
-      folsomRooms[req.params.roomNumber].claimedUntil =
+      allBuildings[req.params.building].rooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
+      allBuildings[req.params.building].rooms[req.params.roomNumber].lastReported = Date.now();
+      allBuildings[req.params.building].rooms[req.params.roomNumber].claimedUntil =
         folsomRooms[req.params.roomNumber].lastReported +
         Number(req.params.durationMins) * 60 * 1000;
-      res.json(folsomRooms[req.params.roomNumber]);
+      res.json(allBuildings[req.params.building].rooms[req.params.roomNumber]);
     }
   }
 );
@@ -256,9 +257,9 @@ app.get("/api/floors", (req, res: Response<Floors>) => {
 });
 
 app.post(
-  "/api/addNoiseReport/:floor/:noiseLevel",
+  "/api/:building/addNoiseReport/:floor/:noiseLevel",
   (req, res: Response<ErrorType | NoiseReport>) => {
-    const floor = floors[req.params.floor];
+    const floor = allBuildings[req.params.building].floors[req.params.floor];
     if (!floor) {
       res.status(404).json({
         status: 404,
