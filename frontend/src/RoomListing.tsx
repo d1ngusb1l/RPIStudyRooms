@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import Collapsible from "./Collapsible";
-import { BuildingContext, Room, RoomDef, validateType } from "./types";
+import { BuildingContext, Room, RoomDef, Rooms, validateType } from "./types";
 import { backendURL } from "./utils";
 import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
@@ -89,7 +89,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 }
 
 // Finds the correct room information to display for list
-function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: RoomProbability }) {
+function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber: string, chance: RoomProbability, tags: Array<String>}) {
 
   const [currentStatus, setCurrentStatus] = useState("");
   const [duration, setDuration] = useState(1);
@@ -106,6 +106,7 @@ function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: stri
     {currentStatus && <SubmitStatusButton rNum={roomNumber} currentStatus={currentStatus} setCurrentStatus={setCurrentStatus} duration={duration} />}
   </Collapsible>
 }
+// <p>Tags: {tags.join(', ')}</p>
 
 // Find the correct colors and symbols to display for list
 function FormatKey({ roomNum, status }: { roomNum: string, status: string }) {
@@ -133,8 +134,18 @@ export interface RoomEstimation {
 
 
 //the big boy function that actually lists out the rooms
-export default function ListRooms() {
+export default function ListRooms({filters} : {filters : Array<String>} ) {
   const { rooms } = useContext(BuildingContext);
+
+  //passed through a filter
+  
+  const newRooms : Rooms = Object.entries(rooms).reduce((acc, [key, value]) => {
+    if (filters.length === 0 || (value.tags && filters.every(filter => value.tags.includes(filter)))) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+  
 
   const listRooms = useMemo(() => {
 
@@ -152,11 +163,11 @@ export default function ListRooms() {
     }
 
     //iterating through our dictionary object and placing each room in the right container
-    rooms ? Object.entries(rooms).forEach(room => {
+    newRooms ? Object.entries(newRooms).forEach(room => {
       const status = StatusCalculation(room[1]);
 
       //creating a slightly larger version of the room datastructure to store the status of the room
-      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status };
+      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status};
       roomProbabilityItems[status].push(modifiedRoom);
 
     }) : 'error';
@@ -183,11 +194,11 @@ export default function ListRooms() {
     });
 
     //mapping our array to the ui element
-    return sortedRooms.map(({ roomNumber, room, estimation: chance }) =>
+    return sortedRooms.map(({ roomNumber, room, estimation: chance}) =>
       <div className="room-box">
         <li key={roomNumber} >
           <FormatKey roomNum={roomNumber} status={chance} />
-          <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
+          <FormatRoom room={room} roomNumber={roomNumber} chance={chance}/>
         </li>
       </div>
     )

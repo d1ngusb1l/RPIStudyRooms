@@ -101,7 +101,7 @@ export function NoiseLevelReporter() {
     const [, setCounter] = useState(0);
 
 
-    //aoyan special, idk wtf any of this does but it makes last reported work
+    //it makes last reported work
     useEffect(() => {
         const localStorageLastReported = localStorage.getItem("lastReported");
         if (localStorageLastReported) {
@@ -147,7 +147,7 @@ export function NoiseLevelReporter() {
         <div>
             {reportedRecently ? (
                 <p> You have reported too recently, please wait until {waitUntil.toLocaleTimeString()} to report again. </p>
-            ) : <><div><p style={{ margin: '1px auto' }}>Report Noise Level of Floor</p></div>
+            ) : <><div><p style={{ margin: '1px auto', fontWeight: 'bold' }}>Report Noise Level of Floor</p></div>
                 <div>
                     <NoiseLevelRadioInput noiseNumber={1} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />
                     <NoiseLevelRadioInput noiseNumber={2} selectedNoiseLevel={selectedNoiseLevel} setSelectedNoiseLevel={setSelectedNoiseLevel} />

@@ -18,7 +18,9 @@ export const RoomDef = Type.Object({
   status: Type.Enum(RoomStatusEnum),
   lastReported: Type.Number(),
   claimedUntil: Type.Optional(Type.Number()),
+  tags: Type.Optional(Type.Array(Type.String())),
 });
+
 export type Room = Static<typeof RoomDef>;
 export const RoomsDef = Type.Record(Type.String(), RoomDef);
 export type Rooms = Record<string, Room>;

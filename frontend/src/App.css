@@ -70,16 +70,36 @@ body {
   flex-direction: row;
   align-items: center;
   align-content: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1.25rem; /* Adjusted to rem for consistency */
 }
 
 .noise-level {
+  outline: auto;
+  padding: 2%;
   display: flex;
   flex-wrap: nowrap;
   flex-shrink: inherit;
   flex-direction: row;
 }
+
+.checkboxes {
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
+.collapsible-noise {
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  gap: 1rem;
+}
+
 /* Holds the map element */
 .map-container {
   display: flex;

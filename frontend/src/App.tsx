@@ -66,12 +66,25 @@ function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (buildin
   )
 }
 
+/* Filter selection screen */
+
+const Checkbox = ({ label, value, onChange}) => {
+  return (
+    <label>
+      <input type="checkbox" checked={value} onChange={onChange} />
+      {label}
+    </label>
+  );
+};
+
 /* Main method app code*/
 export default function MyApp() {
 
   //functions for changing whether the map and legend are displayed
   const [isActive, setIsActive] = useState(true);
   const [isLegendActive, setLegendIsActive] = useState(false);
+  const [isNoiseActive, setNoiseIsActive] = useState(false);
+  const [isFiltersActive, setFiltersIsActive] = useState(false);
 
   const toggleMap = () => {
     setIsActive(current => !current);
@@ -79,6 +92,16 @@ export default function MyApp() {
 
   const toggleLegend = () => {
     setLegendIsActive(current => !current);
+  }
+
+  const toggleNoise = () => {
+    setNoiseIsActive(current => !current);
+    setFiltersIsActive(false);
+  }
+
+  const toggleFilters = () => {
+    setNoiseIsActive(false);
+    setFiltersIsActive(current => !current);
   }
 
   //framework for switching between buildings easily
@@ -99,6 +122,34 @@ export default function MyApp() {
     }, 10 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+
+  //filters
+  const [filters, setFilters] = useState([]);
+  
+  const [checkboxStates, setCheckboxStates] = useState({
+    window: false,
+    table: false,
+    outlet: false,
+    ethernet: false,
+    blackboard: false,
+    whiteboard: false,
+  });
+
+  const handleCheckboxChange = (filter) => {
+    setCheckboxStates((prevState) => {
+      const newState = { ...prevState, [filter]: !prevState[filter] };
+
+      if (newState[filter]) {
+        setFilters((prevFilters) => [...prevFilters, filter]);
+      } else {
+        setFilters((prevFilters) => prevFilters.filter((f) => f !== filter));
+      }
+
+      return newState;
+    });
+  };
+
 
   //potential replacement for backend call once I can get it working ;w;
   //setFloors(validateType(FloorsDef, building?.floors));
@@ -173,10 +224,71 @@ export default function MyApp() {
             <div className="legend-without-map" style={{ display: (isLegendActive && !isActive) ? 'flex' : 'none' }}>
               <img src={legend} className='legend' />
             </div>
+
             <div className="buttons-row">
-              <div className='noise-level'>
-                <NoiseLevelReporter />
+
+              <button onClick={toggleNoise} style={{ display: isNoiseActive || isFiltersActive ? 'none' : 'flex' }}>Noise Level</button>
+              <div className="collapsible-noise" style={{ display: isNoiseActive ? 'flex' : 'none' }} >
+                <div className="buttons-row">
+
+                  <button onClick={toggleNoise}>Hide</button>
+                  <button onClick={toggleFilters} style={{ display: isNoiseActive ? 'flex' : 'none' }} >Filters</button>
+
+                </div>
+                <div className='noise-level'>
+                  <NoiseLevelReporter />
+                </div>
               </div>
+              
+              <button onClick={toggleFilters} style={{ display: isNoiseActive || isFiltersActive ? 'none' : 'flex' }} >Filters</button>
+
+              <div className="collapsible-noise" style={{ display: isFiltersActive ? 'flex' : 'none' }} >
+                <div className="buttons-row">
+                  <button onClick={toggleNoise} style={{ display: isFiltersActive ? 'flex' : 'none' }}>Noise Level</button>
+                  <button onClick={toggleFilters}>Hide</button>
+
+                </div>
+                <div className='noise-level'>
+                  <div>
+                      <div><p style={{ margin: '1px auto', fontWeight: 'bold' }}>Filter Room Tags</p></div>
+                        <div className = "checkboxes">
+                          <Checkbox
+                            label="Window"
+                            value={checkboxStates.window}
+                            onChange={() => handleCheckboxChange('window')}
+                          />
+                          <Checkbox
+                            label="Table"
+                            value={checkboxStates.table}
+                            onChange={() => handleCheckboxChange('table')}
+                          />
+                          <Checkbox
+                            label="Outlet"
+                            value={checkboxStates.outlet}
+                            onChange={() => handleCheckboxChange('outlet')}
+                          />
+                          <Checkbox
+                            label="Ethernet"
+                            value={checkboxStates.ethernet}
+                            onChange={() => handleCheckboxChange('ethernet')}
+                          />
+                          <Checkbox
+                            label="Blackboard"
+                            value={checkboxStates.blackboard}
+                            onChange={() => handleCheckboxChange('blackboard')}
+                          />
+                          <Checkbox
+                            label="Whiteboard"
+                            value={checkboxStates.whiteboard}
+                            onChange={() => handleCheckboxChange('whiteboard')}
+                          />
+                        </div>
+                        <p>Active Filters: {filters.join(', ')}</p>
+                  </div>
+                </div>
+              </div>
+
+
             </div>
             <div className="list-header">
               <h2>List of Rooms</h2>
@@ -185,7 +297,7 @@ export default function MyApp() {
             </div>
             <div className="scrollable-list">
               {buildings && buildings[currentBuilding].rooms
-                && <ListRooms />}
+                && <ListRooms filters={filters} />}
             </div>
           </div>
           <div className='map-container' style={{ display: isActive ? 'flex' : 'none' }} /*style={{display : isActive ? 'flex' : 'none',
