@@ -81,6 +81,8 @@ export const BuildingDef = Type.Object({
   floors: Type.Record(Type.String(), FloorDef)
 })
 export type Building = Static<typeof BuildingDef>
+export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
+export type Buildings = Record<string, Building>
 
 
 export function validateType<T extends TSchema>(

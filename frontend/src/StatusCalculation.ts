@@ -134,7 +134,7 @@ export function StatusCalculation(room: Room): RoomProbability {
   }
 }
 
-export function colorCalc(status: RoomProbability) {
+export function colorCalc(status: String) {
   switch (status) {
     case "Certainly Empty":
       return "#4CFF00";
@@ -161,7 +161,7 @@ export function colorCalc(status: RoomProbability) {
   }
 }
 
-export function doorCalc(status: RoomProbability) {
+export function doorCalc(status: String) {
   switch (status) {
     case "Certainly Empty":
       return roomOpen;

@@ -15,8 +15,9 @@ import {
   NoiseReport,
   NoiseReportDef,
   Building,
+  Buildings,
 } from "./types.js";
-import { floors, folsomLibrary, folsomRooms } from "./db.js";
+import { allBuildings, floors, folsomLibrary, folsomRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -155,6 +156,7 @@ function dbCleanup() {
   // console.log("Closed: " + isClosed());
 
   //setting rooms as closed when library is closed
+  /*
   if (isClosed()) {
     for (const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Closed;
@@ -168,7 +170,7 @@ function dbCleanup() {
       info.lastReported = Date.now();
       info.claimedUntil = undefined;
     }
-  }
+  }*/
 
   console.log("cleanup performed sucessfully!");
 }
@@ -179,12 +181,12 @@ app.listen(port, () => {
   console.log("Listening on *:" + port);
 });
 
-app.get("/api/database", (req, res: Response<Rooms>, next) => {
-  res.json(folsomRooms);
-});
-
 app.get("/api/folsomLibrary", (req, res: Response<Building>, next) => {
   res.json(folsomLibrary);
+});
+
+app.get("/api/buildings", (req, res: Response<Buildings>, next) => {
+  res.json(allBuildings);
 });
 
 app.post(
@@ -215,7 +217,6 @@ app.post(
       });
       return;
     } else {
-      console.log("test???");
       folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
       folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
       folsomLibrary.rooms[req.params.roomNumber].claimedUntil = undefined;

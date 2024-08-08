@@ -14,6 +14,7 @@ export const RoomDef = Type.Object({
   lastReported: Type.Number(),
   claimedUntil: Type.Optional(Type.Number()),
 });
+export type Room = Static<typeof RoomDef>;
 export const RoomsDef = Type.Record(Type.String(), RoomDef);
 export type Rooms = Record<string, Room>
 
@@ -35,6 +36,8 @@ export const BuildingDef = Type.Object({
   floors: Type.Record(Type.String(), FloorDef)
 })
 export type Building = Static<typeof BuildingDef>
+export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
+export type Buildings = Record<string, Building>
 
 export function validateType<T extends TSchema>(
   type: T,
@@ -55,14 +58,12 @@ export function validateType<T extends TSchema>(
     return data;
   } else {
     if (shouldThrow || shouldThrow === undefined) {
-      console.log("test");
       console.error(
         "Got invalid data:",
         JSON.stringify([...Value.Errors(type, data)], null, 2)
       );
       throw new Error("Invalid data.");
     } else {
-      console.log("test2");
       return null;
     }
   }

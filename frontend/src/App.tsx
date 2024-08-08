@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { backendURL } from './utils';
-import { Building, BuildingDef, Floors, FloorsContext, FloorsDef, RoomsDef, validateType } from './types';
+import { Building, BuildingDef, Buildings, BuildingsDef, Floors, FloorsContext, FloorsDef, RoomsDef, validateType } from './types';
 import ListRooms from './RoomListing';
 import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
@@ -14,13 +14,11 @@ import { Menu, MenuButton } from './Menu';
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
 function FloorDropdown({ setCurrentFloor }: { setCurrentFloor: (floor: "3" | "4") => unknown }) {
-  function f3() { setCurrentFloor("3"); }
-  function f4() { setCurrentFloor("4"); }
-
+  
   return (
     <Menu outerLabel="Floors">
-      <MenuButton onClick={f3}>3</MenuButton>
-      <MenuButton onClick={f4}>4</MenuButton>
+      <MenuButton onClick={() => {setCurrentFloor("3");}}>3</MenuButton>
+      <MenuButton onClick={() => {setCurrentFloor("4");}}>4</MenuButton>
     </Menu >
   )
 }
@@ -30,11 +28,22 @@ const floorMapURLs = {
   "4": folsomFloor4
 } as const;
 
+
+function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (building: "folsom" | "barton") => unknown }) {
+
+  return (
+    <Menu outerLabel="Buildings">
+      <MenuButton onClick={() => {setCurrentBuilding("folsom");} }>Folsom Library</MenuButton>
+      <MenuButton onClick={() => {setCurrentBuilding("barton");} }>Barton Hall</MenuButton>
+    </Menu >
+  )
+}
+
 export default function MyApp() {
 
-
+  //functions for changing whether the map and legend are displayed
   const [isActive, setIsActive] = useState(true);
-  const [isLegendActive, setLegendIsActive] = useState(true);
+  const [isLegendActive, setLegendIsActive] = useState(false);
 
   const toggleMap = () => {
     setIsActive(current => !current);
@@ -44,25 +53,30 @@ export default function MyApp() {
     setLegendIsActive(current => !current);
   }
 
+  //framework for switching between buildings easily
+  const [buildings, setBuildings] = useState<Buildings | null>(null);
+  const [currentBuilding, setCurrentBuilding] = useState<"folsom" | "barton">("folsom");
+
+  useEffect(() => {
+    fetch(backendURL("/api/buildings")).then(async (r) => {
+      const data = await r.json();
+      setBuildings(validateType(BuildingsDef, data));
+    })
+  }, []);
+
+  //potential replacement for backend call once I can get it working ;w;
+  //setFloors(validateType(FloorsDef, building?.floors));
+
+  //for switching between floors of a building
   const [floors, setFloors] = useState<Floors | null>(null);
   const [currentFloor, setCurrentFloor] = useState<"3" | "4">("3");
-
+  
   useEffect(() => {
     fetch(backendURL("/api/floors")).then(async (r) => {
       const data = await r.json();
       setFloors(validateType(FloorsDef, data));
     })
-  }, []);
-
-
-  //framework for switching between buildings easily
-  const [building, setBuilding] = useState<Building | null>(null);
-  useEffect(() => {
-    fetch(backendURL("/api/folsomLibrary")).then(async (r) => {
-      const data = await r.json();
-      setBuilding(validateType(BuildingDef, data));
-    })
-  }, []);
+  }, []); 
 
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -117,9 +131,11 @@ export default function MyApp() {
             <div className="list-header">
               <h2>List of Rooms</h2>
               <FloorDropdown setCurrentFloor={setCurrentFloor} />
+              <BuildingDropdown setCurrentBuilding={setCurrentBuilding}/>
             </div>
             <div className="scrollable-list">
-              {building?.rooms && <ListRooms rooms={building.rooms} setRooms={(rooms) => setBuilding({ ...building, rooms })} />}
+              {buildings && buildings[currentBuilding].rooms 
+              && <ListRooms rooms={buildings[currentBuilding].rooms} setRooms={(rooms) => setBuildings({ ...buildings[currentBuilding], rooms })} />}
             </div>
           </div>
           <div className='map-container' style={{ display: isActive ? 'flex' : 'none' }} /*style={{display : isActive ? 'flex' : 'none',

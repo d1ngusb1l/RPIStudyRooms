@@ -1,4 +1,4 @@
-import { Building, Floor, Floors, Rooms, RoomStatusEnum } from "./types.js";
+import { Building, Buildings, Floor, Floors, Rooms, RoomStatusEnum } from "./types.js";
 
 export const folsomRooms: Rooms = {
   "323-A": {
@@ -257,7 +257,13 @@ export const bartonFloor4: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
 
-export const barton: Building = {
+export const bartonHall: Building = {
   "rooms" : bartonRooms,
   "floors" : { "1" : bartonFloor1, "2" : bartonFloor2, "3": folsomFloor3, "4": folsomFloor4},
 };
+
+
+export const allBuildings: Buildings = {
+  "folsom": folsomLibrary,
+  "barton": bartonHall
+}

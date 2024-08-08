@@ -26,7 +26,6 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
 
   return (
     <div style={{ backgroundColor: color, height: 40 }}>
-
       <label>
         <input
           type="radio"
@@ -88,70 +87,6 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   }
 }
 
-/*
-function EmptyButton({ rNum }: { rNum: string }) {
-  const { rooms, update } = useContext(RoomContext);
-
-  return (
-    <button 
-      style={{backgroundColor: '#4CFF00'}}
-      onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
-      const data = await r.json();
-      const newRoom = validateType(RoomDef, data);
-      update({ ...rooms, [rNum]: newRoom });
-    })}>
-      Report as Empty
-    </button>
-  );
-}
-
-function FullButton({ rNum }: { rNum: string }) {
-  const { rooms, update } = useContext(RoomContext);
-
-  return (
-    <button 
-      style={{backgroundColor: '#FF0000'}}
-      onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
-      const data = await r.json();
-      const newRoom = validateType(RoomDef, data);
-      update({ ...rooms, [rNum]: newRoom });
-    })}>
-      Report as Full
-    </button>
-  );
-}
-
-const timeBetweenReminders = 1000 * 60 * 10; // 10 minutes (in ms)
-
-function PersonalUseButton({ rNum }: { rNum: string }) {
-  const { rooms, update } = useContext(RoomContext);
-  const [reportedAt, setReportedAt] = useState(0);
-
-  useEffect(() => {
-    const current = Date.now();
-    const timeRemaining = timeBetweenReminders - (current - reportedAt);
-    if (timeRemaining > 0) {
-      const timeout = setTimeout(() => alert("It's been 10 minutes, you should re-report yourself as in the room."), timeRemaining);
-      return () => clearTimeout(timeout);
-    }
-  }, [reportedAt]);
-
-  return (
-    <button 
-      style={{backgroundColor: '#FF0080'}}
-      onClick={() => fetch(backendURL("/api/reportAsPersonalUse/" + rNum), { method: "POST" }).then(async (r) => {
-      const data = await r.json();
-      const newRoom = validateType(RoomDef, data);
-      update({ ...rooms, [rNum]: newRoom });
-      setReportedAt(Date.now());
-    })}>
-      Report as in Use by You
-    </button>
-  );
-}
-*/
-
-
 function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: RoomProbability }) {
 
   const [currentStatus, setCurrentStatus] = useState("");
@@ -197,14 +132,6 @@ export interface RoomEstimation {
 //the big boy function that actually does the thing
 export default function ListRooms({ rooms, setRooms }: { rooms: Rooms, setRooms: (rooms: Rooms) => unknown }) {
 
-  //grabbing our rooms from the backend
-  /*
-  useEffect(() => {
-    fetch(backendURL("/api/database")).then(async (res) => {
-      const data = await res.json();
-      setRooms(validateType(RoomsDef, data));
-    })
-  }, []) */
   const listRooms = useMemo(() => {
 
     const roomProbabilityItems: Record<RoomProbability, RoomEstimation[]> = {
