@@ -25,7 +25,7 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
   }
 
   return (
-    <div style={{ backgroundColor: color, height: 40 }}>
+    <div style={{ backgroundColor: color, height: 40, fontWeight: "bold"}}>
       <label>
         <input
           type="radio"

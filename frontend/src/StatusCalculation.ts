@@ -139,7 +139,7 @@ export function colorCalc(status: string) {
     case "Certainly Empty":
       return "#4CFF00";
     case "Likely Empty":
-      return "#7FFF00";
+      return "#6BB200";
     case "Possibly Empty":
       return "#CCFF00";
     case "Uncertain":

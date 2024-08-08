@@ -168,6 +168,8 @@ body {
   width: 1.25rem; /* Adjusted to rem for scalability */
   height: 1.25rem; /* Adjusted to rem for scalability */
   border-radius: 50%; /* Fully circular */
+  outline:auto;
+
 }
 
 /* Door icon image */
