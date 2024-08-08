@@ -7,25 +7,50 @@ import { NoiseLevelReporter } from './NoiseLevels';
 import logo from "./assets/rpistudyroomslogo.png";
 import folsomFloor3 from "./assets/folsom3.png";
 import folsomFloor4 from "./assets/folsom4.png";
+import bartonFloor1 from "./assets/barton1.png";
+import bartonFloor2 from "./assets/barton2.png";
+import bartonFloor3 from "./assets/barton3.png";
+import bartonFloor4 from "./assets/barton4.png";
 import legend from "./assets/legend.png"
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
 import { Menu, MenuButton } from './Menu';
 
 
 /* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
-function FloorDropdown({ setCurrentFloor }: { setCurrentFloor: (floor: "3" | "4") => unknown }) {
+function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : string,  setCurrentFloor: (floor: "3" | "4") => unknown }) {
 
-  return (
-    <Menu outerLabel="Floors">
-      <MenuButton onClick={() => { setCurrentFloor("3"); }}>3</MenuButton>
-      <MenuButton onClick={() => { setCurrentFloor("4"); }}>4</MenuButton>
-    </Menu >
-  )
+  if(currentBuilding == "folsom") {
+    return (
+      <Menu outerLabel="Floors">
+        <MenuButton onClick={() => { setCurrentFloor("3"); }}>3</MenuButton>
+        <MenuButton onClick={() => { setCurrentFloor("4"); }}>4</MenuButton>
+      </Menu >
+    )
+  }
+  else if (currentBuilding == "barton") {
+    return (
+      <Menu outerLabel="Floors">
+        <MenuButton onClick={() => { setCurrentFloor("1"); }}>1</MenuButton>
+        <MenuButton onClick={() => { setCurrentFloor("2"); }}>2</MenuButton>
+        <MenuButton onClick={() => { setCurrentFloor("3"); }}>3</MenuButton>
+        <MenuButton onClick={() => { setCurrentFloor("4"); }}>4</MenuButton>
+      </Menu >
+    )
+  }
+
 }
 
 const floorMapURLs = {
-  "3": folsomFloor3,
-  "4": folsomFloor4
+  "folsom" : {
+    "3" : folsomFloor3,
+    "4" : folsomFloor4
+  },
+  "barton" : {
+    "1" : bartonFloor1,
+    "2" : bartonFloor2,
+    "3" : bartonFloor3,
+    "4" : bartonFloor4,
+  }
 } as const;
 
 
@@ -143,7 +168,7 @@ export default function MyApp() {
             </div>
             <div className="list-header">
               <h2>List of Rooms</h2>
-              <FloorDropdown setCurrentFloor={setCurrentFloor} />
+              <FloorDropdown currentBuilding={currentBuilding} setCurrentFloor={setCurrentFloor} />
               <BuildingDropdown setCurrentBuilding={setCurrentBuilding} />
             </div>
             <div className="scrollable-list">
@@ -158,7 +183,7 @@ export default function MyApp() {
                 <div className='controller'/*style={{outline: 'auto'}} */><Controls /></div>
                 <div className='canvas'>
                   <TransformComponent>
-                    <img src={floorMapURLs[currentFloor]} className='map' />
+                    <img src={floorMapURLs[currentBuilding][currentFloor]} className='map' />
                   </TransformComponent>
                 </div>
               </div>
