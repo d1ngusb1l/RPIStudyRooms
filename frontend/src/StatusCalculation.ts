@@ -7,75 +7,6 @@ import roomPOccupied from "./assets/roomPOccupied.png";
 import roomLOccupied from "./assets/roomLOccupied.png";
 import roomClosed from "./assets/roomClosed.png";
 
-// Closing and opening time frontend information for Folsom Library
-const Folsom_Library = {
-  hours: {
-    monday: [new Date(1999, 11, 1, 12), new Date(1999, 11, 1, 20)],
-    tuesday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    wednesday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    thursday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    friday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 17)],
-    saturday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-    sunday: [new Date(1999, 11, 1, 8), new Date(1999, 11, 1, 20)],
-  },
-};
-
-// Determines whether building is currently closed
-export function isClosed() {
-  const currentDate = new Date();
-  const currentTime = currentDate.getHours();
-  const day = currentDate.getDay();
-  let openingTime;
-  let closingTime;
-  let pass = true;
-
-  switch (day) {
-    case 0:
-      openingTime = Folsom_Library.hours.sunday[0].getHours();
-      closingTime = Folsom_Library.hours.sunday[1].getHours();
-      break;
-    case 1:
-      openingTime = Folsom_Library.hours.monday[0].getHours();
-      closingTime = Folsom_Library.hours.monday[1].getHours();
-      break;
-    case 2:
-      openingTime = Folsom_Library.hours.tuesday[0].getHours();
-      closingTime = Folsom_Library.hours.tuesday[1].getHours();
-      break;
-    case 3:
-      openingTime = Folsom_Library.hours.wednesday[0].getHours();
-      closingTime = Folsom_Library.hours.wednesday[1].getHours();
-      break;
-    case 4:
-      openingTime = Folsom_Library.hours.thursday[0].getHours();
-      closingTime = Folsom_Library.hours.thursday[1].getHours();
-      break;
-    case 5:
-      openingTime = Folsom_Library.hours.friday[0].getHours();
-      closingTime = Folsom_Library.hours.friday[1].getHours();
-      break;
-    case 6:
-      openingTime = Folsom_Library.hours.sunday[0].getHours();
-      closingTime = Folsom_Library.hours.sunday[1].getHours();
-      break;
-    default:
-      openingTime = Folsom_Library.hours.sunday[0].getHours();
-      closingTime = Folsom_Library.hours.sunday[1].getHours();
-      pass = false;
-      break;
-  }
-
-  if (
-    ((openingTime < currentTime && currentTime < closingTime) ||
-      (openingTime == currentTime &&
-        currentDate.getSeconds() > 0 &&
-        currentTime < closingTime)) &&
-    pass == true
-  ) {
-    return "Open";
-  }
-  return "Closed";
-}
 
 export enum RoomProbability {
   CertainlyOccupied = "Certainly Occupied",
@@ -103,22 +34,22 @@ export function StatusCalculation(room: Room): RoomProbability {
 
   switch (room.status) {
     case RoomStatusEnum.Full: {
-      if (timeDiff <= 30) {
+      if (timeDiff <= 60) {
         return RoomProbability.CertainlyOccupied;
-      } else if (timeDiff <= 60) {
-        return RoomProbability.LikelyOccupied;
       } else if (timeDiff <= 90) {
+        return RoomProbability.LikelyOccupied;
+      } else if (timeDiff <= 120) {
         return RoomProbability.PossiblyOccupied;
       } else {
         return RoomProbability.Uncertain;
       }
     }
     case RoomStatusEnum.Empty: {
-      if (timeDiff <= 30) {
+      if (timeDiff <= 10) {
         return RoomProbability.CertainlyEmpty;
-      } else if (timeDiff <= 60) {
+      } else if (timeDiff <= 20) {
         return RoomProbability.LikelyEmpty;
-      } else if (timeDiff <= 90) {
+      } else if (timeDiff <= 30) {
         return RoomProbability.PossiblyEmpty;
       } else {
         return RoomProbability.Uncertain;
