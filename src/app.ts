@@ -17,7 +17,7 @@ import {
   Building,
   Buildings,
 } from "./types.js";
-import { allBuildings, floors, folsomLibrary, folsomRooms } from "./db.js";
+import { allBuildings, bartonHall, floors, folsomLibrary, folsomRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -192,63 +192,67 @@ app.get("/api/buildings", (req, res: Response<Buildings>, next) => {
 });
 
 app.post(
-  "/api/reportAsFull/:roomNumber",
+  "/api/:building/reportAsFull/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomLibrary.rooms[req.params.roomNumber]) {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Full;
-      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
-      folsomLibrary.rooms[req.params.roomNumber].claimedUntil = undefined;
-      res.json(folsomLibrary.rooms[req.params.roomNumber]);
+      room.status = RoomStatusEnum.Full;
+      room.lastReported = Date.now();
+      room.claimedUntil = undefined;
+      res.json(room);
     }
   }
 );
 
 app.post(
-  "/api/reportAsEmpty/:roomNumber",
+  "/api/:building/reportAsEmpty/:roomNumber",
   (req, res: Response<Room | ErrorType>) => {
-    if (!folsomLibrary.rooms[req.params.roomNumber]) {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomLibrary.rooms[req.params.roomNumber].status = RoomStatusEnum.Empty;
-      folsomLibrary.rooms[req.params.roomNumber].lastReported = Date.now();
-      folsomLibrary.rooms[req.params.roomNumber].claimedUntil = undefined;
-      res.json(folsomLibrary.rooms[req.params.roomNumber]);
+
+        room.status = RoomStatusEnum.Empty;
+        room.lastReported = Date.now();
+        room.claimedUntil = undefined;
+        res.json(room);
     }
   }
 );
 
 app.post(
-  "/api/reportAsPersonalUse/:roomNumber/:durationMins",
+  "/api/:building/reportAsPersonalUse/:roomNumber/:durationMins",
   (req, res: Response<Room | ErrorType>) => {
+    const room = allBuildings[req.params.building].rooms[req.params.roomNumber];
     if (isNaN(Number(req.params.durationMins))) {
       return res.status(400).json({
         status: 400,
         message: "Invalid duration.",
       });
     }
-    if (!folsomRooms[req.params.roomNumber]) {
+    if (!room) {
       res.status(404).json({
         status: 404,
         message: "Room not found.",
       });
       return;
     } else {
-      folsomRooms[req.params.roomNumber].status = RoomStatusEnum.PersonalUse;
-      folsomRooms[req.params.roomNumber].lastReported = Date.now();
-      folsomRooms[req.params.roomNumber].claimedUntil =
-        folsomRooms[req.params.roomNumber].lastReported +
+      room.status = RoomStatusEnum.PersonalUse;
+      room.lastReported = Date.now();
+      room.claimedUntil =
+      room.lastReported +
         Number(req.params.durationMins) * 60 * 1000;
-      res.json(folsomRooms[req.params.roomNumber]);
+      res.json(room);
     }
   }
 );
@@ -258,9 +262,9 @@ app.get("/api/floors", (req, res: Response<Floors>) => {
 });
 
 app.post(
-  "/api/addNoiseReport/:floor/:noiseLevel",
+  "/api/:building/addNoiseReport/:floor/:noiseLevel",
   (req, res: Response<ErrorType | NoiseReport>) => {
-    const floor = floors[req.params.floor];
+    const floor = allBuildings[req.params.building].floors[req.params.floor];
     if (!floor) {
       res.status(404).json({
         status: 404,

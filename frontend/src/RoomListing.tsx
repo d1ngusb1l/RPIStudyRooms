@@ -1,6 +1,6 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Collapsible from "./Collapsible";
-import { Room, RoomContext, RoomDef, Rooms, RoomsDef, RoomStatusEnum, validateType } from "./types";
+import { BuildingContext, Room, RoomDef, validateType } from "./types";
 import { backendURL } from "./utils";
 import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
@@ -41,16 +41,16 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
 function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   { rNum: string, currentStatus: string, setCurrentStatus: (status: string) => unknown, duration: number }) {
 
-  const { rooms, update } = useContext(RoomContext);
+  const { updateRoom, buildingKey } = useContext(BuildingContext);
 
   switch (currentStatus) {
     case "Empty":
       return (
         <button
-          onClick={() => fetch(backendURL("/api/reportAsEmpty/" + rNum), { method: "POST" }).then(async (r) => {
+          onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsEmpty/${rNum}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
-            update({ ...rooms, [rNum]: newRoom });
+            updateRoom(rNum, newRoom);
             setCurrentStatus("");
           })}>
           Submit
@@ -60,10 +60,10 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
     case "Full":
       return (
         <button
-          onClick={() => fetch(backendURL("/api/reportAsFull/" + rNum), { method: "POST" }).then(async (r) => {
+          onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsFull/${rNum}`), { method: "POST" }).then(async (r) => {
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
-            update({ ...rooms, [rNum]: newRoom });
+            updateRoom(rNum, newRoom);
             setCurrentStatus("");
           })}>
           Submit
@@ -72,10 +72,10 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 
     case "In Use by Me":
       return (<button
-        onClick={() => fetch(backendURL(`/api/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
+        onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
           const data = await r.json();
           const newRoom = validateType(RoomDef, data);
-          update({ ...rooms, [rNum]: newRoom });
+          updateRoom(rNum, newRoom);
           setCurrentStatus("");
         })}>
         Submit
@@ -130,7 +130,8 @@ export interface RoomEstimation {
 
 
 //the big boy function that actually does the thing
-export default function ListRooms({ rooms, setRooms }: { rooms: Rooms, setRooms: (rooms: Rooms) => unknown }) {
+export default function ListRooms() {
+  const { rooms } = useContext(BuildingContext);
 
   const listRooms = useMemo(() => {
 
@@ -190,5 +191,5 @@ export default function ListRooms({ rooms, setRooms }: { rooms: Rooms, setRooms:
   }, [rooms])
 
   //returning our list of rooms
-  return rooms !== null && <RoomContext.Provider value={{ rooms, update: setRooms }}><ul style={{ listStyle: 'none' }}>{listRooms}</ul></RoomContext.Provider>;
+  return rooms !== null && <ul style={{ listStyle: 'none' }}>{listRooms}</ul>;
 }

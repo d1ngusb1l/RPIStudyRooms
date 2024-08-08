@@ -37,7 +37,7 @@ export const BuildingDef = Type.Object({
 });
 export type Building = Static<typeof BuildingDef>;
 export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
-export type Buildings = Record<string, Building>
+export type Buildings = Record<string, Building>;
 
 export function validateType<T extends TSchema>(
   type: T,
@@ -69,25 +69,28 @@ export function validateType<T extends TSchema>(
   }
 }
 
-export const RoomContext = createContext<{
-  rooms: Rooms;
-  update: (rooms: Rooms) => unknown;
-}>({ rooms: {}, update: () => {} });
-
-export const FloorsContext = createContext<{
-  floors: Floors;
-  updateFloor: (floorNum: string, floor: Floor) => unknown;
+export type BuildingContextType = {
+  building: Building;
+  buildingKey: string;
+  updateBuilding: (building: Building) => unknown;
+  currentFloorKey: string;
+  currentFloor: Floor;
+  updateFloor: (floorKey: string, floor: Floor) => unknown;
   updateAllFloors: (floors: Floors) => unknown;
-}>({
-  floors: {},
+  rooms: Rooms;
+  updateRoom: (roomKey: string, room: Room) => unknown;
+  updateAllRooms: (rooms: Rooms) => unknown;
+};
+
+export const BuildingContext = createContext<BuildingContextType>({
+  building: { rooms: {}, floors: {} },
+  buildingKey: "",
+  currentFloorKey: "",
+  currentFloor: { noiseReports: [] },
+  updateBuilding: () => {},
   updateFloor: () => {},
   updateAllFloors: () => {},
+  rooms: {},
+  updateRoom: () => {},
+  updateAllRooms: () => {},
 });
-
-//will eventually replace the need for a floor or rooms context as everything can be accessed through the building
-/*
-export const BuidlingContext = createContext<{
-  rooms: Rooms;
-  update: (rooms: Rooms) => unknown;
-}>({ rooms: {}, update: () => {} });
- */
