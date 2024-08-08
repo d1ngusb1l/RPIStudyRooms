@@ -101,8 +101,6 @@ export default function MyApp() {
                 <button onClick={toggleMap}>Display Map</button>
                 <button onClick={toggleLegend}>Display Legend</button>
           </div>
-
-
           
           <div className="feedbacklink">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link" target="_blank">
