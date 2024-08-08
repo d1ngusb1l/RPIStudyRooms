@@ -17,7 +17,7 @@ import {
   Building,
   Buildings,
 } from "./types.js";
-import { allBuildings, bartonHall, floors, folsomLibrary, folsomRooms } from "./db.js";
+import { allBuildings, bartonFloor1, bartonFloor2, bartonFloor3, bartonFloor4, bartonHall, floors, folsomFloor3, folsomFloor4, folsomLibrary, folsomRooms } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -135,25 +135,61 @@ function isClosed() {
 function dbCleanup() {
   //getting rid of noise reports that are more
   //than an hour old
-  let nrOld = floors["3"].noiseReports;
+  //can make function but too tired to do so rn
+  //dont feel like fighting types
+  let nrOld = folsomFloor3.noiseReports;
   let nrNew = [];
   for (let i = 0; i < nrOld.length; i++) {
     if (Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
-  floors["3"].noiseReports = nrNew;
+  folsomFloor3.noiseReports = nrNew;
 
-  nrOld = floors["4"].noiseReports;
+  nrOld = folsomFloor4.noiseReports;
   nrNew = [];
   for (let i = 0; i < nrOld.length; i++) {
     if (Date.now() - nrOld[i].timeReported < 3600000) {
       nrNew.push(nrOld[i]);
     }
   }
-  floors["4"].noiseReports = nrNew;
+  folsomFloor4.noiseReports = nrNew;
 
-  // console.log("Closed: " + isClosed());
+  nrOld = bartonFloor1.noiseReports;
+  nrNew = [];
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
+      nrNew.push(nrOld[i]);
+    }
+  }
+  bartonFloor1.noiseReports = nrNew;
+
+  nrOld = bartonFloor2.noiseReports;
+  nrNew = [];
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
+      nrNew.push(nrOld[i]);
+    }
+  }
+  bartonFloor2.noiseReports = nrNew;
+
+  nrOld = bartonFloor3.noiseReports;
+  nrNew = [];
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
+      nrNew.push(nrOld[i]);
+    }
+  }
+  bartonFloor3.noiseReports = nrNew;
+
+  nrOld = bartonFloor4.noiseReports;
+  nrNew = [];
+  for (let i = 0; i < nrOld.length; i++) {
+    if (Date.now() - nrOld[i].timeReported < 3600000) {
+      nrNew.push(nrOld[i]);
+    }
+  }
+  bartonFloor4.noiseReports = nrNew;
 
   //setting rooms as closed when library is closed
   /*

@@ -139,7 +139,7 @@ export function NoiseLevelReporter() {
 
 
     //react hook for keeping track of the currently reported noise level
-    const [selectedNoiseLevel, setSelectedNoiseLevel] = useState(0);
+    const [selectedNoiseLevel, setSelectedNoiseLevel] = useState(3);
 
     return (
 
