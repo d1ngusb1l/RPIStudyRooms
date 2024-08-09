@@ -2,9 +2,12 @@
 
 ## How to Setup
 
-1. Clone the repository to your local machine (`git clone https://github.com/d1ngusb1l/RPIStudyRooms.git`) and navigate to the project directory (`cd rpistudyrooms`).
-2. Copy `.env.sample` to `.env` (`cp .env.sample .env`) [on windows do `copy .env.sample .env`]. 
-3. Run `docker compose up -d` to start the development server.
+1. Clone the repository to your local machine (`git clone https://github.com/d1ngusb1l/RPIStudyRooms.git`).
+2. Download Node.js and Docker ([Node.js download page](https://nodejs.org/en/download/package-manager)) ([Docker homepage](https://www.docker.com/)).
+3. Navigate to the project directory (`cd rpistudyrooms`) in your terminal of choice.
+4. Run `npm install`, then `cd frontend`, and then `npm install` again.
+5. Run `docker compose up -d` to start the development server.
+6. Open the website by entering the URL [localhost:5157](localhost:5157) in your search bar.
 
 ## Setting up React Components
 
