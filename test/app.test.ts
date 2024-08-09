@@ -20,6 +20,10 @@ function validateType<T extends TSchema>(type: T, data: unknown): Static<T> {
   }
 }
 
+//a small set of unit tests in case we want to go down this route
+//due to how ui intensive our application is, manual testing 
+//makes a lot more sense
+
 function goodResponse<T extends TSchema>(val: Response, type: T): Static<T> {
   expect(val.statusCode).to.equal(200);
   expect(val.headers["content-type"]).to.contain("application/json");

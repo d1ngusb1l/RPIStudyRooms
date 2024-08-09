@@ -2,10 +2,11 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useStat
 
 const MenuContext = createContext<{ setClosed: () => void }>({ setClosed: () => { } });
 
-// This is important. Did you know? Without this, nothing is real.
-// Tentative analysis, maybe handles behaviours of interactive elements.
 
+//custom drop down menus for our project
 export function Menu(props: PropsWithChildren<{ outerLabel: React.ReactNode }>) {
+
+    //react hooks for opening/closing the menu
     const [open, setOpen] = useState(false);
     const setClosed = useCallback(() => setOpen(false), []);
     const toggle = useCallback(() => setOpen(open => !open), []);
@@ -28,7 +29,9 @@ export function Menu(props: PropsWithChildren<{ outerLabel: React.ReactNode }>) 
     )
 }
 
+//buttons contained within a dropdown menu
 export function MenuButton(props: Omit<React.JSX.IntrinsicElements["button"], "className" | "role" | "tabIndex">) {
+    //closes the drop down menu as soon as a button gets clicked
     const { setClosed } = useContext(MenuContext);
     return <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabIndex={-1} onClick={(event) => {
         setClosed();

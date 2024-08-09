@@ -1,6 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import { create } from 'domain';
 
+/*
+  Unused file from when we still had postgresql as part of our tech stack...
+  has been left in for the time being to not mess up anything with docker environments
+*/
+
+
+/*
 const prisma = new PrismaClient()
 
 process.on("SIGINT", async () => {
@@ -45,4 +52,4 @@ export async function accessDB() {
   return rooms;
 }
 
-export default prisma;
+export default prisma;*/

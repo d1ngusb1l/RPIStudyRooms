@@ -1,5 +1,6 @@
 import { Building, Buildings, Floor, Floors, Rooms, RoomStatusEnum } from "./types.js";
 
+//rooms in the folsom library
 export const folsomRooms: Rooms = {
   "323-A": {
     status: RoomStatusEnum.Empty,
@@ -215,24 +216,22 @@ export const folsomRooms: Rooms = {
   },
 };
 
+//floors with noise reports for folsom
 export const folsomFloor3: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
-
 export const folsomFloor4: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
 
-export const floors: Floors = {
-  "3": folsomFloor3,
-  "4": folsomFloor4,
-};
-
+///combined folsom datastructure
 export const folsomLibrary: Building = {
   "rooms" : folsomRooms,
   "floors" : { "3": folsomFloor3, "4": folsomFloor4},
 };
 
+//list of barton rooms
+//their attributes are way more standardized
 export const bartonRooms: Rooms = {
   "1108": {
     status: RoomStatusEnum.Empty,
@@ -302,28 +301,27 @@ export const bartonRooms: Rooms = {
 
 };
 
+//list of barton floors for containing noise reports
 export const bartonFloor1: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
-
 export const bartonFloor2: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
-
 export const bartonFloor3: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
-
 export const bartonFloor4: Floor = {
   noiseReports: [{ timeReported: 0, noiseLevel: 0 }],
 };
 
+//combinged barton building structure
 export const bartonHall: Building = {
   "rooms" : bartonRooms,
   "floors" : { "1" : bartonFloor1, "2" : bartonFloor2, "3": folsomFloor3, "4": folsomFloor4},
 };
 
-
+//combining all the building data structures into a single dictionary
 export const allBuildings: Buildings = {
   "folsom": folsomLibrary,
   "barton": bartonHall

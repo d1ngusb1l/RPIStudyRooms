@@ -4,11 +4,11 @@ import { BuildingContext, Room, RoomDef, Rooms, validateType } from "./types";
 import { backendURL } from "./utils";
 import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
-/* Circle select buttons for different report buttons */
+// Radio buttons for different report options
 function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
   { currentStatus: string, displayStatus: string, setCurrentStatus: (status: string) => unknown }) {
 
-  //selecting the color
+  //selecting the color based on display status
   let color = "";
   switch (displayStatus) {
     case "Empty":
@@ -24,6 +24,7 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
       color = "#FFFFFF";
   }
 
+  //returning the radio button with appropriate text and color
   return (
     <div style={{ backgroundColor: color, height: 40, fontWeight: "bold"}}>
       <label>
@@ -38,20 +39,24 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
   );
 }
 
-/* Button for submitting the currently selected noise */
+// Button for submitting the currently selected noise
 function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
   { rNum: string, currentStatus: string, setCurrentStatus: (status: string) => unknown, duration: number }) {
 
   const { updateRoom, buildingKey } = useContext(BuildingContext);
 
+  //using a switch case as we want to return fully different div elements depending on what user currently has selected
   switch (currentStatus) {
     case "Empty":
       return (
         <button
           onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsEmpty/${rNum}`), { method: "POST" }).then(async (r) => {
+            //grabbing the room from the backend
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
+            //updating the room to be empty
             updateRoom(rNum, newRoom);
+            //resetting which button has been pressed
             setCurrentStatus("");
           })}>
           Submit
@@ -62,9 +67,12 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
       return (
         <button
           onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsFull/${rNum}`), { method: "POST" }).then(async (r) => {
+            //grabbing the room from the backend
             const data = await r.json();
             const newRoom = validateType(RoomDef, data);
+            //updating the room to be full
             updateRoom(rNum, newRoom);
+            //resetting which button has been pressed
             setCurrentStatus("");
           })}>
           Submit
@@ -74,9 +82,12 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
     case "In Use by Me":
       return (<button
         onClick={() => fetch(backendURL(`/api/${buildingKey}/reportAsPersonalUse/${rNum}/${duration}`), { method: "POST" }).then(async (r) => {
+          //grabbing the room from the back end
           const data = await r.json();
           const newRoom = validateType(RoomDef, data);
+          //updating the room to be in personal use
           updateRoom(rNum, newRoom);
+            //resetting which button has been pressed
           setCurrentStatus("");
         })}>
         Submit
@@ -91,9 +102,13 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 // Finds the correct room information to display for list
 function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber: string, chance: RoomProbability, tags: Array<String>}) {
 
+  //react hook for determining which submit button to display
   const [currentStatus, setCurrentStatus] = useState("");
+
+  //react hook for determining how long user wants to use the room
   const [duration, setDuration] = useState(1);
 
+  //collapsible menu for a single room in the list with all the different repor toptions
   return <Collapsible title={""}>
     <p>Reported as: {' ' + room.status + ' '}</p>
     {room.lastReported > 0 && <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>}
@@ -108,7 +123,8 @@ function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber
 }
 // <p>Tags: {tags.join(', ')}</p>
 
-// Find the correct colors and symbols to display for list
+//Find the correct colors and symbols to display for list
+//eseentially displays the header of each collapsible menu in the list
 function FormatKey({ roomNum, status }: { roomNum: string, status: string }) {
   const doorIcon = doorCalc(status);
 
@@ -124,8 +140,6 @@ function FormatKey({ roomNum, status }: { roomNum: string, status: string }) {
 
 }
 
-//ugly as heck but is a 3n solution to sorting this datastructure
-//so cope I guess, index 0 is room number, index 1 is the data, index 2 is the estimation of the room
 export interface RoomEstimation {
   roomNumber: string;
   room: Room;
@@ -135,10 +149,11 @@ export interface RoomEstimation {
 
 //the big boy function that actually lists out the rooms
 export default function ListRooms({filters} : {filters : Array<String>} ) {
+
+  //grabbing the list of rooms from the building context
   const { rooms } = useContext(BuildingContext);
 
-  //passed through a filter
-  
+  //verifying every room passed to us is valid
   const newRooms : Rooms = Object.entries(rooms).reduce((acc, [key, value]) => {
     if (filters.length === 0 || (value.tags && filters.every(filter => value.tags.includes(filter)))) {
       acc[key] = value;
@@ -146,9 +161,10 @@ export default function ListRooms({filters} : {filters : Array<String>} ) {
     return acc;
   }, {});
   
-
+  //function which we call in our react component
   const listRooms = useMemo(() => {
 
+    //list of all possible statuses for a room
     const roomProbabilityItems: Record<RoomProbability, RoomEstimation[]> = {
       "Certainly Empty": [],
       "Likely Empty": [],
@@ -189,6 +205,7 @@ export default function ListRooms({filters} : {filters : Array<String>} ) {
       RoomProbability.Closed,
     ];
 
+    //adding the rooms in order
     probabilityOrder.forEach(probability => {
       sortedRooms.push(...roomProbabilityItems[probability]);
     });

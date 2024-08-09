@@ -16,11 +16,11 @@ import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pa
 import { Menu, MenuButton } from './Menu';
 
 
-/* This is where the dropdown menu is handled! Edit the buttons in here to add the functions */
 
-/* Floor dropdown menu that changes floor map displayed */
-function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : string,  setCurrentFloor: (floor: "3" | "4") => unknown }) {
+//Dropdown element for changing which floor is being displayed
+function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : string,  setCurrentFloor: (floor: string) => unknown }) {
 
+  //folsom drop down
   if(currentBuilding == "folsom") {
     return (
       <Menu outerLabel="Floors">
@@ -29,6 +29,7 @@ function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : s
       </Menu >
     )
   }
+  //barton dropdown
   else if (currentBuilding == "barton") {
     return (
       <Menu outerLabel="Floors">
@@ -42,6 +43,8 @@ function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : s
 
 }
 
+//const for mapping the current floor variable
+//to an image in our assets foloder
 const floorMapURLs = {
   "folsom" : {
     "3" : folsomFloor3,
@@ -55,7 +58,7 @@ const floorMapURLs = {
   }
 } as const;
 
-/* Building dropdown menu that changes building map displayed */
+//Building dropdown menu that changes building map displayed
 function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (building: "folsom" | "barton") => unknown }) {
 
   return (
@@ -66,8 +69,7 @@ function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (buildin
   )
 }
 
-/* Filter selection screen */
-
+//Tiny react element for a single checkbox in the filter
 const Checkbox = ({ label, value, onChange}) => {
   return (
     <label>
@@ -77,7 +79,7 @@ const Checkbox = ({ label, value, onChange}) => {
   );
 };
 
-/* Main method app code*/
+//Main method app code
 export default function MyApp() {
 
   //functions for changing whether the map and legend are displayed
@@ -86,47 +88,51 @@ export default function MyApp() {
   const [isNoiseActive, setNoiseIsActive] = useState(false);
   const [isFiltersActive, setFiltersIsActive] = useState(false);
 
+  //functions for passing into the hide/show buttons 
   const toggleMap = () => {
     setIsActive(current => !current);
   }
-
   const toggleLegend = () => {
     setLegendIsActive(current => !current);
   }
 
+  //functions for changing whether the noise
+  //and filter menus are being display
   const toggleNoise = () => {
     setNoiseIsActive(current => !current);
     setFiltersIsActive(false);
   }
-
   const toggleFilters = () => {
     setNoiseIsActive(false);
     setFiltersIsActive(current => !current);
   }
 
-  //framework for switching between buildings easily
+  //react hooks for switching between current building
   const [buildings, setBuildings] = useState<Buildings | null>(null);
   const [currentBuilding, setCurrentBuilding] = useState<"folsom" | "barton">("folsom");
 
+  //grabbing our building datastructures from the backend
   useEffect(() => {
     fetch(backendURL("/api/buildings")).then(async (r) => {
       const data = await r.json();
       setBuildings(validateType(BuildingsDef, data));
     });
 
+    //function for continually grabbing an updated version of the buildings datastructures
     const interval = setInterval(() => {
       fetch(backendURL("/api/buildings")).then(async (r) => {
         const data = await r.json();
         setBuildings(validateType(BuildingsDef, data));
       })
-    }, 10 * 1000);
+    }, 250);
     return () => clearInterval(interval);
   }, []);
 
 
-  //filters
+  //react hook for filters
   const [filters, setFilters] = useState([]);
   
+  //list of all attributes which a user can sort rooms by
   const [checkboxStates, setCheckboxStates] = useState({
     window: false,
     table: false,
@@ -136,10 +142,15 @@ export default function MyApp() {
     whiteboard: false,
   });
 
+  //function for the checkbox buttons
   const handleCheckboxChange = (filter) => {
     setCheckboxStates((prevState) => {
+
+      //determining whether the checkbox is being
+      //checkd or uncheck
       const newState = { ...prevState, [filter]: !prevState[filter] };
 
+      //ensuring the filter exists
       if (newState[filter]) {
         setFilters((prevFilters) => [...prevFilters, filter]);
       } else {
@@ -151,13 +162,10 @@ export default function MyApp() {
   };
 
 
-  //potential replacement for backend call once I can get it working ;w;
-  //setFloors(validateType(FloorsDef, building?.floors));
-
   //for switching between floors of a building
   const [currentFloor, setCurrentFloor] = useState<keyof Building["floors"]>("3");
 
-
+  //button pannel for zooming in/out on the map
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
     return (
@@ -169,14 +177,21 @@ export default function MyApp() {
     );
   };
 
+  //context provider for switching buildings/floors/rooms
   const buildingContextData: BuildingContextType | null = useMemo(() => {
+
+    //ensuring the current building that we are attempting to update exists
     if (buildings && buildings[currentBuilding]) {
+
+      //switching building to the current building
       const ret: BuildingContextType = {
         building: buildings[currentBuilding],
         buildingKey: currentBuilding,
         updateBuilding: (building) => {
           setBuildings({ ...buildings, [currentBuilding]: building });
         },
+
+        //switching our current floors to floors of current building
         currentFloorKey: currentFloor,
         currentFloor: buildings[currentBuilding].floors[currentFloor],
         updateAllFloors: (floors) => {
@@ -185,6 +200,8 @@ export default function MyApp() {
         updateFloor: (floorKey, floor) => {
           setBuildings({ ...buildings, [currentBuilding]: { ...buildings[currentBuilding], floors: { ...buildings[currentBuilding].floors, [floorKey]: floor } } });
         },
+
+        //switching current rooms to rooms of building
         rooms: buildings[currentBuilding].rooms,
         updateRoom: (roomKey, room) => {
           setBuildings({ ...buildings, [currentBuilding]: { ...buildings[currentBuilding], rooms: { ...buildings[currentBuilding].rooms, [roomKey]: room } } });
@@ -199,7 +216,7 @@ export default function MyApp() {
     }
   }, [buildings, currentBuilding, currentFloor]);
 
-  /* UI formatting*/
+  //UI formatting
   return (
     <div>
       <header className="title">
@@ -216,7 +233,7 @@ export default function MyApp() {
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link" target="_blank">
             Come give us feedback!</a>
         </div>
-
+  
       </header>
       {buildingContextData && <BuildingContext.Provider value={buildingContextData}>
         <div className="content-and-map">

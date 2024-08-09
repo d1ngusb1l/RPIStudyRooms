@@ -7,7 +7,7 @@ import roomPOccupied from "./assets/roomPOccupied.png";
 import roomLOccupied from "./assets/roomLOccupied.png";
 import roomClosed from "./assets/roomClosed.png";
 
-
+//enum for all possible statuses of a room
 export enum RoomProbability {
   CertainlyOccupied = "Certainly Occupied",
   LikelyOccupied = "Likely Occupied",
@@ -23,15 +23,22 @@ export enum RoomProbability {
 
 // Determines the probablity of a room being open or occupied.
 export function StatusCalculation(room: Room): RoomProbability {
+  
+  //time room was reported as full/empty
   const reportTime = new Date(room.lastReported);
+
+  //current time
   const currentTime = new Date();
-  //time difference in milliseconds
+
+  //time difference between now and report in milliseconds
   let timeDiff = currentTime.getTime() - reportTime.getTime();
   //converting to seconds
   timeDiff /= 1000;
   //converting to minutes
   timeDiff /= 60;
 
+  //switch case for returning room status depending on how
+  //long ago report was made as well as 
   switch (room.status) {
     case RoomStatusEnum.Full: {
       if (timeDiff <= 60) {
@@ -56,6 +63,7 @@ export function StatusCalculation(room: Room): RoomProbability {
       }
     }
     case RoomStatusEnum.PersonalUse: {
+      //personal use rooms will remain certainly occupied until room is done being used
       const endTime = new Date(room.claimedUntil!);
       if (currentTime < endTime) {
         return RoomProbability.CertainlyOccupied;
@@ -64,12 +72,14 @@ export function StatusCalculation(room: Room): RoomProbability {
       }
     }
     default:
+      //for now assume room is closed
       return RoomProbability.Closed;
   }
 }
 
 // Takes a probability and returns a color to match it
 export function colorCalc(status: string) {
+  //different colors for different statuses
   switch (status) {
     case "Certainly Empty":
       return "#4CFF00";
@@ -98,6 +108,7 @@ export function colorCalc(status: string) {
 
 // Takes a probability and returns a door symbol to match it
 export function doorCalc(status: string) {
+  //all of these are defined images imported from assets
   switch (status) {
     case "Certainly Empty":
       return roomOpen;
