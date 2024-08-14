@@ -17,7 +17,18 @@ import {
   Building,
   Buildings,
 } from "./types.js";
-import { allBuildings, bartonFloor1, bartonFloor2, bartonFloor3, bartonFloor4, bartonHall, folsomFloor3, folsomFloor4, folsomLibrary, folsomRooms } from "./db.js";
+import {
+  allBuildings,
+  bartonFloor1,
+  bartonFloor2,
+  bartonFloor3,
+  bartonFloor4,
+  bartonHall,
+  folsomFloor3,
+  folsomFloor4,
+  folsomLibrary,
+  folsomRooms,
+} from "./db.js";
 
 //various useful constants for filepaths
 const __filename = fileURLToPath(import.meta.url);
@@ -192,7 +203,7 @@ function dbCleanup() {
     }
     displayAsClosed = true;
   }
-  //setting rooms to open when library opens back up 
+  //setting rooms to open when library opens back up
   else if (displayAsClosed) {
     for (const [roomNum, info] of Object.entries(folsomRooms)) {
       info.status = RoomStatusEnum.Empty;
@@ -231,6 +242,11 @@ app.post(
         message: "Room not found.",
       });
       return;
+    } else if (room.status === RoomStatusEnum.Closed) {
+      return res.status(403).json({
+        status: 403,
+        message: "Room is closed.",
+      });
     } else {
       //setting room as full
       room.status = RoomStatusEnum.Full;
@@ -253,12 +269,17 @@ app.post(
         message: "Room not found.",
       });
       return;
+    } else if (room.status === RoomStatusEnum.Closed) {
+      return res.status(403).json({
+        status: 403,
+        message: "Room is closed.",
+      });
     } else {
-        //setting room as empty
-        room.status = RoomStatusEnum.Empty;
-        room.lastReported = Date.now();
-        room.claimedUntil = undefined;
-        res.json(room);
+      //setting room as empty
+      room.status = RoomStatusEnum.Empty;
+      room.lastReported = Date.now();
+      room.claimedUntil = undefined;
+      res.json(room);
     }
   }
 );
@@ -282,13 +303,17 @@ app.post(
         message: "Room not found.",
       });
       return;
+    } else if (room.status === RoomStatusEnum.Closed) {
+      return res.status(403).json({
+        status: 403,
+        message: "Room is closed.",
+      });
     } else {
       //setting room in personal use
       room.status = RoomStatusEnum.PersonalUse;
       room.lastReported = Date.now();
       room.claimedUntil =
-      room.lastReported +
-        Number(req.params.durationMins) * 60 * 1000;
+        room.lastReported + Number(req.params.durationMins) * 60 * 1000;
       res.json(room);
     }
   }

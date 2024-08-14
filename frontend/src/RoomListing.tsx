@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import Collapsible from "./Collapsible";
-import { BuildingContext, Room, RoomDef, Rooms, validateType } from "./types";
+import { BuildingContext, Room, RoomDef, Rooms, RoomStatusEnum, validateType } from "./types";
 import { backendURL } from "./utils";
 import { StatusCalculation, colorCalc, adjust, doorCalc, RoomProbability } from "./StatusCalculation";
 
@@ -26,7 +26,7 @@ function StatusRadioInput({ currentStatus, displayStatus, setCurrentStatus }:
 
   //returning the radio button with appropriate text and color
   return (
-    <div style={{ backgroundColor: color, height: 40, fontWeight: "bold"}}>
+    <div style={{ backgroundColor: color, height: 40, fontWeight: "bold" }}>
       <label>
         <input
           type="radio"
@@ -87,7 +87,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
           const newRoom = validateType(RoomDef, data);
           //updating the room to be in personal use
           updateRoom(rNum, newRoom);
-            //resetting which button has been pressed
+          //resetting which button has been pressed
           setCurrentStatus("");
         })}>
         Submit
@@ -100,7 +100,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 }
 
 // Finds the correct room information to display for list
-function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber: string, chance: RoomProbability, tags: Array<String>}) {
+function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber: string, chance: RoomProbability, tags: Array<String> }) {
 
   //react hook for determining which submit button to display
   const [currentStatus, setCurrentStatus] = useState("");
@@ -113,12 +113,13 @@ function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber
     <p>Reported as: {' ' + room.status + ' '}</p>
     {room.lastReported > 0 && <p>at: {new Date(room.lastReported).toLocaleTimeString()}</p>}
     {room.claimedUntil !== undefined && <p>Claimed until: {new Date(room.claimedUntil).toLocaleTimeString()}</p>}
-    <p>Our Estimation: <text style={{ color: adjust(colorCalc(chance), -53), fontWeight: "bold" }} >{chance}</text></p>
+    {room.status !== RoomStatusEnum.Closed && <p>Our Estimation: <text style={{ color: adjust(colorCalc(chance), -53), fontWeight: "bold" }} >{chance}</text></p>}
 
-    <StatusRadioInput currentStatus={currentStatus} displayStatus="Empty" setCurrentStatus={setCurrentStatus} />
-    <StatusRadioInput currentStatus={currentStatus} displayStatus="Full" setCurrentStatus={setCurrentStatus} />
-    <StatusRadioInput currentStatus={currentStatus} displayStatus="In Use by Me" setCurrentStatus={setCurrentStatus} />{currentStatus === "In Use by Me" && <label><input type="number" placeholder="Duration in minutes" min="1" max="120" value={duration} onChange={(e) => setDuration(Number(e.target.value))} /> Reservation Time (minutes)</label>}
-    {currentStatus && <SubmitStatusButton rNum={roomNumber} currentStatus={currentStatus} setCurrentStatus={setCurrentStatus} duration={duration} />}
+    {room.status !== RoomStatusEnum.Closed && <div><StatusRadioInput currentStatus={currentStatus} displayStatus="Empty" setCurrentStatus={setCurrentStatus} />
+      <StatusRadioInput currentStatus={currentStatus} displayStatus="Full" setCurrentStatus={setCurrentStatus} />
+      <StatusRadioInput currentStatus={currentStatus} displayStatus="In Use by Me" setCurrentStatus={setCurrentStatus} />{currentStatus === "In Use by Me" && <label><input type="number" placeholder="Duration in minutes" min="1" max="120" value={duration} onChange={(e) => setDuration(Number(e.target.value))} /> Reservation Time (minutes)</label>}
+      {currentStatus && <SubmitStatusButton rNum={roomNumber} currentStatus={currentStatus} setCurrentStatus={setCurrentStatus} duration={duration} />}
+    </div>}
   </Collapsible>
 }
 // <p>Tags: {tags.join(', ')}</p>
@@ -148,19 +149,19 @@ export interface RoomEstimation {
 
 
 //the big boy function that actually lists out the rooms
-export default function ListRooms({filters} : {filters : Array<String>} ) {
+export default function ListRooms({ filters }: { filters: Array<String> }) {
 
   //grabbing the list of rooms from the building context
   const { rooms } = useContext(BuildingContext);
 
   //verifying every room passed to us is valid
-  const newRooms : Rooms = Object.entries(rooms).reduce((acc, [key, value]) => {
+  const newRooms: Rooms = Object.entries(rooms).reduce((acc, [key, value]) => {
     if (filters.length === 0 || (value.tags && filters.every(filter => value.tags.includes(filter)))) {
       acc[key] = value;
     }
     return acc;
   }, {});
-  
+
   //function which we call in our react component
   const listRooms = useMemo(() => {
 
@@ -183,7 +184,7 @@ export default function ListRooms({filters} : {filters : Array<String>} ) {
       const status = StatusCalculation(room[1]);
 
       //creating a slightly larger version of the room datastructure to store the status of the room
-      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status};
+      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status };
       roomProbabilityItems[status].push(modifiedRoom);
 
     }) : 'error';
@@ -211,11 +212,11 @@ export default function ListRooms({filters} : {filters : Array<String>} ) {
     });
 
     //mapping our array to the ui element
-    return sortedRooms.map(({ roomNumber, room, estimation: chance}) =>
+    return sortedRooms.map(({ roomNumber, room, estimation: chance }) =>
       <div className="room-box">
         <li key={roomNumber} >
           <FormatKey roomNum={roomNumber} status={chance} />
-          <FormatRoom room={room} roomNumber={roomNumber} chance={chance}/>
+          <FormatRoom room={room} roomNumber={roomNumber} chance={chance} />
         </li>
       </div>
     )

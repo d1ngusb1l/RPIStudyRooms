@@ -59,6 +59,17 @@ export const BuildingsDef = Type.Record(Type.String(), BuildingDef);
 export type Buildings = Record<string, Building>;
 
 //function for validating the types being passed through to the front end
+// Keep these overloads, they stop type errors
+export function validateType<T extends TSchema>(
+  type: T,
+  data: unknown,
+  shouldThrow?: true
+): Static<T>;
+export function validateType<T extends TSchema>(
+  type: T,
+  data: unknown,
+  shouldThrow: false
+): Static<T> | null;
 export function validateType<T extends TSchema>(
   type: T,
   data: unknown,
