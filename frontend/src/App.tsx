@@ -18,10 +18,10 @@ import { Menu, MenuButton } from './Menu';
 
 
 //Dropdown element for changing which floor is being displayed
-function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : string,  setCurrentFloor: (floor: string) => unknown }) {
+function FloorDropdown({ currentBuilding, setCurrentFloor }: { currentBuilding: string, setCurrentFloor: (floor: string) => unknown }) {
 
   //folsom drop down
-  if(currentBuilding == "folsom") {
+  if (currentBuilding == "folsom") {
     return (
       <Menu outerLabel="Floors">
         <MenuButton onClick={() => { setCurrentFloor("3"); }}>3</MenuButton>
@@ -45,16 +45,16 @@ function FloorDropdown({currentBuilding, setCurrentFloor }: {currentBuilding : s
 
 //const for mapping the current floor variable
 //to an image in our assets foloder
-const floorMapURLs = {
-  "folsom" : {
-    "3" : folsomFloor3,
-    "4" : folsomFloor4
+const floorMapURLs: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  "folsom": {
+    "3": folsomFloor3,
+    "4": folsomFloor4
   },
-  "barton" : {
-    "1" : bartonFloor1,
-    "2" : bartonFloor2,
-    "3" : bartonFloor3,
-    "4" : bartonFloor4,
+  "barton": {
+    "1": bartonFloor1,
+    "2": bartonFloor2,
+    "3": bartonFloor3,
+    "4": bartonFloor4,
   }
 } as const;
 
@@ -70,7 +70,7 @@ function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (buildin
 }
 
 //Tiny react element for a single checkbox in the filter
-const Checkbox = ({ label, value, onChange}) => {
+const Checkbox = ({ label, value, onChange }) => {
   return (
     <label>
       <input type="checkbox" checked={value} onChange={onChange} />
@@ -131,7 +131,7 @@ export default function MyApp() {
 
   //react hook for filters
   const [filters, setFilters] = useState([]);
-  
+
   //list of all attributes which a user can sort rooms by
   const [checkboxStates, setCheckboxStates] = useState({
     window: false,
@@ -163,7 +163,15 @@ export default function MyApp() {
 
 
   //for switching between floors of a building
-  const [currentFloor, setCurrentFloor] = useState<keyof Building["floors"]>("3");
+  const [currentFloor, setCurrentFloor] = useState<keyof Building["floors"]>("");
+
+  useEffect(() => {
+    if (!buildings) return;
+    if (!Object.keys(buildings[currentBuilding].floors).includes(currentFloor)) {
+      const smallestFloorNum = Math.min(...Object.keys(buildings[currentBuilding].floors).map(Number));
+      setCurrentFloor(smallestFloorNum.toString());
+    }
+  }, [buildings, currentBuilding, currentFloor]);
 
   //button pannel for zooming in/out on the map
   const Controls = () => {
@@ -216,6 +224,10 @@ export default function MyApp() {
     }
   }, [buildings, currentBuilding, currentFloor]);
 
+  if (!buildings?.[currentBuilding]?.floors?.[currentFloor]) {
+    return <div>Loading app...</div>;
+  }
+
   //UI formatting
   return (
     <div>
@@ -233,7 +245,7 @@ export default function MyApp() {
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhawJh8TH_RB4fMmowpS-CwPTQL1xr-HOYfV7MMB8gyib6dQ/viewform?usp=sf_link" target="_blank">
             Come give us feedback!</a>
         </div>
-  
+
       </header>
       {buildingContextData && <BuildingContext.Provider value={buildingContextData}>
         <div className="content-and-map">
@@ -256,7 +268,7 @@ export default function MyApp() {
                   <NoiseLevelReporter />
                 </div>
               </div>
-              
+
               <button onClick={toggleFilters} style={{ display: isNoiseActive || isFiltersActive ? 'none' : 'flex' }} >Filters</button>
 
               <div className="collapsible-noise" style={{ display: isFiltersActive ? 'flex' : 'none' }} >
@@ -267,40 +279,40 @@ export default function MyApp() {
                 </div>
                 <div className='noise-level'>
                   <div>
-                      <div><p style={{ margin: '1px auto', fontWeight: 'bold' }}>Filter Room Tags</p></div>
-                        <div className = "checkboxes">
-                          <Checkbox
-                            label="Window"
-                            value={checkboxStates.window}
-                            onChange={() => handleCheckboxChange('window')}
-                          />
-                          <Checkbox
-                            label="Table"
-                            value={checkboxStates.table}
-                            onChange={() => handleCheckboxChange('table')}
-                          />
-                          <Checkbox
-                            label="Outlet"
-                            value={checkboxStates.outlet}
-                            onChange={() => handleCheckboxChange('outlet')}
-                          />
-                          <Checkbox
-                            label="Ethernet"
-                            value={checkboxStates.ethernet}
-                            onChange={() => handleCheckboxChange('ethernet')}
-                          />
-                          <Checkbox
-                            label="Blackboard"
-                            value={checkboxStates.blackboard}
-                            onChange={() => handleCheckboxChange('blackboard')}
-                          />
-                          <Checkbox
-                            label="Whiteboard"
-                            value={checkboxStates.whiteboard}
-                            onChange={() => handleCheckboxChange('whiteboard')}
-                          />
-                        </div>
-                        <p>Active Filters: {filters.join(', ')}</p>
+                    <div><p style={{ margin: '1px auto', fontWeight: 'bold' }}>Filter Room Tags</p></div>
+                    <div className="checkboxes">
+                      <Checkbox
+                        label="Window"
+                        value={checkboxStates.window}
+                        onChange={() => handleCheckboxChange('window')}
+                      />
+                      <Checkbox
+                        label="Table"
+                        value={checkboxStates.table}
+                        onChange={() => handleCheckboxChange('table')}
+                      />
+                      <Checkbox
+                        label="Outlet"
+                        value={checkboxStates.outlet}
+                        onChange={() => handleCheckboxChange('outlet')}
+                      />
+                      <Checkbox
+                        label="Ethernet"
+                        value={checkboxStates.ethernet}
+                        onChange={() => handleCheckboxChange('ethernet')}
+                      />
+                      <Checkbox
+                        label="Blackboard"
+                        value={checkboxStates.blackboard}
+                        onChange={() => handleCheckboxChange('blackboard')}
+                      />
+                      <Checkbox
+                        label="Whiteboard"
+                        value={checkboxStates.whiteboard}
+                        onChange={() => handleCheckboxChange('whiteboard')}
+                      />
+                    </div>
+                    <p>Active Filters: {filters.join(', ')}</p>
                   </div>
                 </div>
               </div>
