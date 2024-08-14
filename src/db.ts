@@ -318,7 +318,7 @@ export const bartonFloor4: Floor = {
 //combinged barton building structure
 export const bartonHall: Building = {
   "rooms" : bartonRooms,
-  "floors" : { "1" : bartonFloor1, "2" : bartonFloor2, "3": folsomFloor3, "4": folsomFloor4},
+  "floors" : { "1" : bartonFloor1, "2" : bartonFloor2, "3": bartonFloor3, "4": bartonFloor4},
 };
 
 //combining all the building data structures into a single dictionary
