@@ -70,7 +70,7 @@ function BuildingDropdown({ setCurrentBuilding }: { setCurrentBuilding: (buildin
 }
 
 //Tiny react element for a single checkbox in the filter
-const Checkbox = ({ label, value, onChange }) => {
+const Checkbox = ({ label, value, onChange }: { label: string, value: boolean, onChange: React.ChangeEventHandler<HTMLInputElement> }) => {
   return (
     <label>
       <input type="checkbox" checked={value} onChange={onChange} />
@@ -129,8 +129,6 @@ export default function MyApp() {
   }, []);
 
 
-  //react hook for filters
-  const [filters, setFilters] = useState([]);
 
   //list of all attributes which a user can sort rooms by
   const [checkboxStates, setCheckboxStates] = useState({
@@ -142,8 +140,11 @@ export default function MyApp() {
     whiteboard: false,
   });
 
+  //react hook for filters
+  const [filters, setFilters] = useState<(keyof typeof checkboxStates)[]>([]);
+
   //function for the checkbox buttons
-  const handleCheckboxChange = (filter) => {
+  const handleCheckboxChange = (filter: keyof typeof checkboxStates) => {
     setCheckboxStates((prevState) => {
 
       //determining whether the checkbox is being

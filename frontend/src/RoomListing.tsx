@@ -100,7 +100,7 @@ function SubmitStatusButton({ rNum, currentStatus, setCurrentStatus, duration }:
 }
 
 // Finds the correct room information to display for list
-function FormatRoom({ room, roomNumber, chance, tags }: { room: Room, roomNumber: string, chance: RoomProbability, tags: Array<String> }) {
+function FormatRoom({ room, roomNumber, chance }: { room: Room, roomNumber: string, chance: RoomProbability }) {
 
   //react hook for determining which submit button to display
   const [currentStatus, setCurrentStatus] = useState("");
@@ -149,21 +149,21 @@ export interface RoomEstimation {
 
 
 //the big boy function that actually lists out the rooms
-export default function ListRooms({ filters }: { filters: Array<String> }) {
+export default function ListRooms({ filters }: { filters: Array<string> }) {
 
   //grabbing the list of rooms from the building context
   const { rooms } = useContext(BuildingContext);
 
-  //verifying every room passed to us is valid
-  const newRooms: Rooms = Object.entries(rooms).reduce((acc, [key, value]) => {
-    if (filters.length === 0 || (value.tags && filters.every(filter => value.tags.includes(filter)))) {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
-
   //function which we call in our react component
   const listRooms = useMemo(() => {
+
+    //verifying every room passed to us is valid
+    const newRooms: Rooms = Object.entries(rooms).reduce((acc: Rooms, [key, value]) => {
+      if (filters.length === 0 || (value.tags && filters.every(filter => value.tags!.includes(filter)))) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
 
     //list of all possible statuses for a room
     const roomProbabilityItems: Record<RoomProbability, RoomEstimation[]> = {
@@ -220,7 +220,7 @@ export default function ListRooms({ filters }: { filters: Array<String> }) {
         </li>
       </div>
     )
-  }, [rooms])
+  }, [filters, rooms])
 
   //returning our list of rooms
   return rooms !== null && <ul style={{ listStyle: 'none' }}>{listRooms}</ul>;
