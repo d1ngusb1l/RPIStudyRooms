@@ -153,7 +153,7 @@ export default function MyApp() {
 
       //ensuring the filter exists
       if (newState[filter]) {
-        setFilters((prevFilters) => [...prevFilters, filter]);
+        setFilters((prevFilters) => !prevFilters.includes(filter) ? [...prevFilters, filter] : prevFilters);
       } else {
         setFilters((prevFilters) => prevFilters.filter((f) => f !== filter));
       }

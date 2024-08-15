@@ -180,14 +180,16 @@ export default function ListRooms({ filters }: { filters: Array<string> }) {
     }
 
     //iterating through our dictionary object and placing each room in the right container
-    newRooms ? Object.entries(newRooms).forEach(room => {
-      const status = StatusCalculation(room[1]);
+    if (newRooms) {
+      Object.entries(newRooms).forEach(room => {
+        const status = StatusCalculation(room[1]);
 
-      //creating a slightly larger version of the room datastructure to store the status of the room
-      const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status };
-      roomProbabilityItems[status].push(modifiedRoom);
+        //creating a slightly larger version of the room datastructure to store the status of the room
+        const modifiedRoom: RoomEstimation = { roomNumber: room[0], room: room[1], estimation: status };
+        roomProbabilityItems[status].push(modifiedRoom);
 
-    }) : 'error';
+      });
+    }
 
     //creating the array we will ultimately map our ui element onto
     const sortedRooms: RoomEstimation[] = [];
