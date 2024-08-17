@@ -5,9 +5,18 @@
 1. Clone the repository to your local machine (`git clone https://github.com/d1ngusb1l/RPIStudyRooms.git`).
 2. Download Node.js and Docker ([Node.js download page](https://nodejs.org/en/download/package-manager)) ([Docker homepage](https://www.docker.com/)).
 3. Navigate to the project directory (`cd rpistudyrooms`) in your terminal of choice.
+
+If you wish to start the page manually:
+
 4. Run `npm install`, then `cd frontend`, and then `npm install` again.
 5. Run `docker compose up -d` to start the development server.
 6. Open the website by entering the URL [localhost:5157](localhost:5157) in your search bar.
+
+Alternatively, you can use one of our automatic webpage start scripts:
+
+For Linux machines, run the command "bash AppStart.sh"
+
+For Windows machines, run the command "./AppStart.bat"
 
 ## Setting up React Components
 
