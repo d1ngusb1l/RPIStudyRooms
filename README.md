@@ -10,7 +10,7 @@ If you wish to start the page manually:
 
 4. Run `npm install`, then `cd frontend`, and then `npm install` again.
 5. Run `docker compose up -d` to start the development server.
-6. Open the website by entering the URL [localhost:5157](localhost:5157) in your search bar.
+6. Open the website by entering the URL [localhost:5157](localhost:5173) in your search bar.
 
 Alternatively, you can use one of our automatic webpage start scripts:
 
